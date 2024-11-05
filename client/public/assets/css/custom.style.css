@@ -1,0 +1,43 @@
+.flex-d-row{
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap:wrap;
+}
+#text-custom-color{
+    color: rgb(7, 110, 189) !important ; ;
+}
+
+.btn.btn-text-custom.btn-active-light.active{
+    color:#0755bf !important;
+}
+
+.search-filter-header{
+    background-color: #065590;
+}
+
+.bg-primary1{
+    background-color: #065590;  
+}
+#login-button button{
+    background-color: #065590;
+    color:#fff ;  
+}
+#login-button button:hover{
+    background-color: #175c91;
+    color:#fff ;  
+}
+@media (min-width:1200px){
+#message-report-card .message-count-card {
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+}
+}
+
+@media (min-width:1600px){
+    #message-report-card .message-count-card {
+        padding-right: 10px !important;
+        padding-left: 10px !important;
+    }
+    }
+/* style={{ backgroundColor: "#e1ebf6" }}
+ */
