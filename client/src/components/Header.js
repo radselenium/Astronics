@@ -1,4 +1,8 @@
 import React from 'react'
+import { useMsal } from "@azure/msal-react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from '../UserContext'; 
+
 
 const LogoutUser = () => {
 
@@ -14,13 +18,30 @@ const LogoutUser = () => {
 export {LogoutUser};
 
 
-const Header = ({ activeMenuItem }) => {
+
+
+const Header = ({ activeMenuItem  }) => {
 
     const username = sessionStorage.getItem('userName');
     console.log(username)
     const divStyle = {
         backgroundImage: 'url("assets/media/misc/menu-header-bg.jpg")',
     };
+    const { instance } = useMsal(); // Access MSAL instance
+    const navigate = useNavigate(); // Use useNavigate for redirection
+    const handleLogout = (event) => {
+        event.preventDefault(); // Prevent default behavior
+        instance.logoutRedirect({
+          postLogoutRedirectUri: "/", // Redirect to home page after logout
+        }).catch(e => {
+          console.error("Logout failed:", e);
+        });
+      };
+
+     const { user } = useUser(); // Get user from context
+// console.log(user);
+// console.log(user.displayName);
+   
 
     return (
 
@@ -99,9 +120,9 @@ const Header = ({ activeMenuItem }) => {
                                 <div class="text-end   align-items-center justify-content-center me-3">
 
                                   
-                                    <button  className="btn  btn-sm  p-ml-auto d-flex align-items-center" type='button'>
+                                    <button  className="btn  btn-sm  p-ml-auto d-flex align-items-center"  >
 
-                                    <a href="#" class="text-gray-800  fs-4 fw-bold d-flex align-items-center"><span className='fs-3 pe-2'>{username}</span> <i onClick={LogoutUser} class=" text-hover-primary fa fa-sign-out fs-2"></i> </a>
+                                    <a href="#" class="text-gray-800  fs-4 fw-bold d-flex align-items-center"><span className='fs-3 pe-2'>{user && user.displayName ? user.displayName : " "}</span> <i onClick={handleLogout} class=" text-hover-primary fa fa-sign-out fs-2"></i> </a>
 
                                     </button>
                                     {/* <ul className="dropdown-menu py-0 border-lignt border" style={{ zIndex: "1000" }}>
