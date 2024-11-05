@@ -2,7 +2,8 @@ import axios from "axios";
 const host = require('./config');
 
 const HttpClient = axios.create({
-  baseURL: host.URL+host.PORT,
+  //baseURL: host.URL+host.PORT,
+  baseURL: host.URL,
 });
 
 
