@@ -29,5 +29,59 @@ code {
   font-weight: bold; /* Optionally make header text bold */
 }
 
+@media (max-width: 768px) {
+  .label-container {
+    width: 100px !important; /* Adjust as needed */
+    text-align: right;
+    padding-right: 10px !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width:1280px){
+  #custom-search-bar .date-picker-custom-width {
+    max-width: 200px!important; /* Adjust as needed */
+}
+  .labelright{
+   
+    width:70px!important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1280px) {
+
+  .textsize{
+    font-size: 18px !important;
+  }
+
+  #custom-search-bar1 .col-lg-4,
+    #custom-search-bar1 .col-xl-4,
+    #custom-search-bar1 .col-md-4 {
+        flex: 0 0 35%; /* Adjust the width as needed */
+        max-width: 30%; /* Match the flex width */
+        text-align: right;
+    }
+}
+
+@media (max-width: 1280px) {
+
+  .textsize{
+    font-size: 24px !important;
+  }
+
+    
+    
+}
+
+@media (min-width: 1600px) and (max-width:1920px){
+  #custom-search-bar .date-picker-custom-width {
+      max-width: 150px; /* Adjust as needed */
+  }
+  .labelright{
+    padding-right: 5px;
+    text-align:right;
+  }
+}
+
+
 
 

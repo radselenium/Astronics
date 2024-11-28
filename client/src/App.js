@@ -8,12 +8,24 @@ import Header from './components/Header';
 import axios from 'axios';
 import { UserProvider } from './UserContext'; // Import UserProvider
 import { useUser } from './UserContext';
+import { getToken } from "./utils/authToken"; // Import the getToken function
+
 
 // Component to protect routes
 function ProtectedRoute({ children }) {
   const { accounts } = useMsal();
+
+  React.useEffect(() => {
+    const checkToken = async () => {
+      const token = await getToken(); // Redirects to login if token is invalid
+      if (!token) return; // Prevent navigation if token is missing
+    };
+    checkToken();
+  }, []);
+
   return accounts.length > 0 ? children : <Navigate to="/" />;
 }
+
 
 // Main App Component
 function App() {
@@ -37,19 +49,7 @@ function App() {
 function Login() {
   const { instance ,accounts } = useMsal();
   const navigate = useNavigate();
-  // const handleLogin = () => {
-  //   instance.loginRedirect({
-  //     scopes: ["User.Read"],
-  //   })
-  //   .then((response) => {
-  //     console.log("Login successful!", response);
-  //     navigate("/dashboard"); // Redirect after login
-
-  //   })
-  //   .catch((error) => {
-  //     console.error("Login failed:", error);
-  //   });
-  // };
+  
 
   const handleLogin = () => {
     instance.loginRedirect({
@@ -111,7 +111,7 @@ function MainApp() {
   const fetchUserDetails = async () => {
     // Check if an active account is set
     const activeAccount = instance.getActiveAccount();
-
+    console.log(activeAccount);
     if (activeAccount) {
       const request = {
         scopes: ["User.Read"],
@@ -119,15 +119,22 @@ function MainApp() {
       };
 
       try {
-        const response = await instance.acquireTokenSilent(request);
-        const userDetailsResponse = await axios.get("https://graph.microsoft.com/v1.0/me", {
-          headers: {
-            Authorization: `Bearer ${response.accessToken}`,
-          },
-        });
+        const accessToken = await getToken(); // Automatically handles token expiration and redirection
+        console.log(accessToken);
+        // Exit if no token is available
+        if (!accessToken){
+          navigate("/");
+          return;
+        }  
+        // Fetch user details using the token
+    const response = await axios.get("https://graph.microsoft.com/v1.0/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-        console.log("Fetched User Details:", userDetailsResponse.data);
-        setUser(userDetailsResponse.data); // Set user details in context
+    console.log("User details fetched:", response.data);
+    setUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
       }

@@ -11,6 +11,9 @@ import { msalConfig } from './msalConfig'; // Ensure this file contains your MSA
 // Initialize MSAL instance
 const msalInstance = new PublicClientApplication(msalConfig);
 
+// Export msalInstance for use in other files
+export { msalInstance };
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <MsalProvider instance={msalInstance}>
