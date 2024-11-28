@@ -7,8 +7,9 @@ export const MessageTypes=[
     {key:"6",value:"SELLERPOCHANGEACK",name:"Seller PO Change Acknowledged"},
     {key:"7",value:"PoShipNotice",name:"Seller Shipment"},
     {key:"8",value:"PoInvoice",name:"Seller Invoice"},
-    {key:"9",value:"PoInvoiceExp",name:"Seller Invoice Exception"},
-    {key:"10",value:"PoInvoiceExpAck",name:"Seller Invoice Acknowledged"},
+    {key:"9",value:"PoInvoiceAck",name:"Po Invoice Ack"},
+    {key:"10",value:"PoInvoiceExp",name:"Seller Invoice Exception"},
+    {key:"11",value:"PoInvoiceExpAck",name:"Seller Invoice Acknowledged"},
     
     // {key:"11",value:"QUOTEREQ",name:"Quote Request"},
     // {key:"12",value:"QUOTERESINTERIM",name:"Quote Response Interim"},

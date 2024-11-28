@@ -23,6 +23,7 @@ const SearchFilter = (props) => {
     const [showSearch, setShowSearch] = useState(props.showSearch);
     const [isSavedSelected, setIsSavedSelected] = useState(false);
     const [isEditable, setIsEditable] = useState(false)
+    const [HandleChange, setHandleChange] = useState(false);
     console.log(new Date(props.endDate))
     console.log(new Date(props.startDate))
     console.log(props.setShowDataTable)
@@ -50,7 +51,7 @@ const SearchFilter = (props) => {
     // const [startDate, setStartDate] = useState(subMonths(new Date(), 3));
     // const [endDate, setEndDate] = useState(new Date());
     const [startDate, setStartDate] = useState(props.startDate);
-  const [endDate, setEndDate] = useState(props.endDate);
+    const [endDate, setEndDate] = useState(props.endDate);
     const [messageType, setMessageType] = useState('All');
     const [documentId, setDocumentId] = useState('');
     const [test, setTest] = useState('');
@@ -60,7 +61,8 @@ const SearchFilter = (props) => {
 
     const handleEndDateChange = (date) => {
         console.log(date);
-       // date.setUTCHours(23, 59, 59, 999);
+        setHandleChange(true);
+        // date.setUTCHours(23, 59, 59, 999);
         setEndDate(date);
         console.log(endDate);
     };
@@ -111,27 +113,43 @@ const SearchFilter = (props) => {
     };
 
 
+
+
+    const isCurrentZoneBehindUTC = (date) => {
+        // Get the time string with the UTC offset in the specified time zone
+        console.log(date);
+        let offsetMinutes = new Date().getTimezoneOffset();
+        if (offsetMinutes > 0) {
+            const LocalDateTime = new Date(date);
+            console.log(LocalDateTime);
+            LocalDateTime.setHours(LocalDateTime.getHours() + 13);
+            return LocalDateTime;
+        }
+        return date;
+    };
+
+
     const Reset = (e) => {
         e.preventDefault();
         setStartDate(subMonths(new Date(), 1));
-       // setEndDate((new Date()));
+        // setEndDate((new Date()));
         const EndDate = new Date();
-    EndDate.setUTCHours(23,59,59,999);
-    const QueryEndDate = EndDate;
-    EndDate.setDate(EndDate.getDate() - 1)
-    setEndDate(EndDate);
-      //  setStartDate((prevStartDate) => (subMonths(new Date(), 3)));
-    //setEndDate((prevEndDate) => new Date());
+        EndDate.setUTCHours(23, 59, 59, 999);
+        const QueryEndDate = EndDate;
+        EndDate.setDate(EndDate.getDate() - 1)
+        setEndDate(EndDate);
+        //  setStartDate((prevStartDate) => (subMonths(new Date(), 3)));
+        //setEndDate((prevEndDate) => new Date());
         setMessageType('All');
         setDocumentId('');
         console.log(startDate);
         console.log(endDate);
-      
+
         const newFormData = {
             startDate: subMonths(startDate, 3),
             endDate: QueryEndDate,
             messageType: 'All',
-            
+
         };
         console.log("test");
         //console.log('hi')
@@ -179,21 +197,21 @@ const SearchFilter = (props) => {
         setSavedSearch(e.target.value);
         setIsSavedSelected(true);
     }
-   // var getStartDate = startDate.getDate();
+    // var getStartDate = startDate.getDate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         var getStartDate = formatDate(startDate, 0);
         console.log(getStartDate);
         var getEndDate = formatDate(endDate, 1);
-       // getEndDate= new Date (getEndDate.setUTCHours(23, 59, 59, 999));
+        // getEndDate= new Date (getEndDate.setUTCHours(23, 59, 59, 999));
         console.log(getEndDate);
         //var getDocumentId = documentId??documentId;
 
-        if(getStartDate > getEndDate ){
-            toast("Invalid Start Date",{
-                position:"top-right",
-                type:"error"
+        if (getStartDate > getEndDate) {
+            toast("Invalid Start Date", {
+                position: "top-right",
+                type: "error"
             })
             return;
         }
@@ -210,75 +228,80 @@ const SearchFilter = (props) => {
         //getRecordBySearchValue(newFormData);
     };
 
-//     const formatDate = (date, addDate) => {
-       
-//         var d = new Date(date),
-//             month = '' + (d.getMonth() + 1),
-//             day = '' + (date.getDate() + addDate),
-//             year = d.getFullYear();
-//         var d2 = new Date(year + "-" + month + "-" + day)
-//         console.log(d2)
-//         if(addDate==0){
-      
-// return d2
-//         }
-//         else if(addDate==1)
-//         {
-      
-//         return d2
-//         }
-//     }
+    //     const formatDate = (date, addDate) => {
+
+    //         var d = new Date(date),
+    //             month = '' + (d.getMonth() + 1),
+    //             day = '' + (date.getDate() + addDate),
+    //             year = d.getFullYear();
+    //         var d2 = new Date(year + "-" + month + "-" + day)
+    //         console.log(d2)
+    //         if(addDate==0){
+
+    // return d2
+    //         }
+    //         else if(addDate==1)
+    //         {
+
+    //         return d2
+    //         }
+    //     }
 
 
-// const formatDate = (date, addDate) => {
-  
-//     var d = new Date(date),
-//         month = '' + (d.getMonth() + 1),
-//         day = '' + (date.getDate() + addDate),
-//         year = d.getFullYear();
-//     var d2 = new Date(year + "-" + month + "-" + day)
-//     console.log(d2)
-//     d2.setDate(d2.getDate()+1);
-//     d2.setUTCHours(0, 0, 0, 0)
-//     if(addDate){
-//         d2.setTime(d2.getTime() - 1);
-//     }
-//     console.log(d2.toISOString());
-//     return d2.toISOString();
-    
-// }
+    // const formatDate = (date, addDate) => {
+
+    //     var d = new Date(date),
+    //         month = '' + (d.getMonth() + 1),
+    //         day = '' + (date.getDate() + addDate),
+    //         year = d.getFullYear();
+    //     var d2 = new Date(year + "-" + month + "-" + day)
+    //     console.log(d2)
+    //     d2.setDate(d2.getDate()+1);
+    //     d2.setUTCHours(0, 0, 0, 0)
+    //     if(addDate){
+    //         d2.setTime(d2.getTime() - 1);
+    //     }
+    //     console.log(d2.toISOString());
+    //     return d2.toISOString();
+
+    // }
 
 
-const formatDate = (date, addDate) => {
-   
-    const d2 = date;
-    if (addDate) {
-     
-      console.log(d2);
-      d2.setUTCHours(23, 59, 59, 999);
-      console.log("After ISOString" + d2.toISOString());
-     
-      console.log("End Date Condition");
-      d2.setDate(d2.getDate() + 1);
-      console.log("Before adding Date" + d2.toISOString());
-      const endDate = d2.toISOString();
-      d2.setDate(d2.getDate() - 1);
-      console.log("After subtract Date" + d2.toISOString());
-    
-      return endDate;
-    }
-    d2.setUTCHours(0, 0, 0, 0);
-  
- 
-    console.log(d2.toISOString());
-    return d2.toISOString();
-  };
+    const formatDate = (date, addDate) => {
+
+        const d2 = date;
+        if (addDate) {
+
+            console.log(d2);
+            const offminutes = new Date().getTimezoneOffset(); // for utc negative regions
+            if (offminutes > 0 && HandleChange) {
+                d2.setDate(d2.getDate() - 1);       // for utc negative regions
+                setHandleChange(false);
+            }
+            d2.setUTCHours(23, 59, 59, 999);
+            console.log("After ISOString" + d2.toISOString());
+
+            console.log("End Date Condition");
+            d2.setDate(d2.getDate() + 1);
+            console.log("Before adding Date" + d2.toISOString());
+            const endDate = d2.toISOString();
+            d2.setDate(d2.getDate() - 1);
+            console.log("After subtract Date" + d2.toISOString());
+
+            return endDate;
+        }
+        d2.setUTCHours(0, 0, 0, 0);
 
 
-  useEffect(() => {
-    setStartDate(new Date(props.startDate));
-    setEndDate(new Date(props.endDate));
-  }, [props.startDate, props.endDate]);
+        console.log(d2.toISOString());
+        return d2.toISOString();
+    };
+
+
+    useEffect(() => {
+        setStartDate(new Date(props.startDate));
+        setEndDate(new Date(props.endDate));
+    }, [props.startDate, props.endDate]);
 
     return (
         <div>
@@ -289,371 +312,22 @@ const formatDate = (date, addDate) => {
                         <div className='d-flex align-items-center'>
                             <span className='text-white m-0 px-3 fs-3'>Search</span>
                         </div>
-                        {showSettings ? <>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', }} className="dropdown  mx-2" id='action-items-dropdown'>
-                                <button type="button" className="btn btn-light btn-sm dropdown-toggle p-ml-auto d-flex align-items-center" data-bs-toggle="dropdown" style={{ padding: '3px' }}>
-                                    <i className="fa fa-gear" style={{ fontSize: '16px', color: '#065590' }}></i>
-                                </button>
-                                <ul className="dropdown-menu py-0">
-                                    {!isSaved ? <li onClick={SwitchSavedsearch}><a className="dropdown-item text-center px-3 fw-bold" href="#"><i class="fa-regular fa-floppy-disk px-2 " style={{ color: 'blue' }}></i>Saved Search</a></li>
-                                        : <li onClick={SwitchDefaultsearch}><a className="dropdown-item text-center px-3 fw-bold" href="#"><i class="fa-regular fa-floppy-disk px-2" style={{ color: 'blue' }}></i>Basic Search</a></li>
-                                    }
-
-                                </ul>
-                            </div>
-                        </> : ''}
+                       
                     </div>
 
 
-                    {isSaved ?
-                        <div className=" col-md-12 " style={{ backgroundColor: "#e1ebf6" }}>
-                            <div className="col-md-12 pb-5 pt-3" style={{ padding: "0px" }}>
-                                <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline " style={{ flexDirection: "row", display: "flex" }}>
+                    
 
-                                    <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-                                        <span class=" fw-small text-dark fs-6">Saved Search</span>
-                                    </div>
 
-                                    <div class="col-md-6 ">
 
+                        {/* Basic Filter */}
 
-                                        <select class="form-select" name="messageType" placeholder='Select Saved Search' value={savedSearch}
-                                            onChange={handleSavedSearchChange} aria-label="Select example" style={{ padding: "2px 5px", minWidth: "200px" }}>
-                                            <option value="" disabled>Select Saved Search</option>
-                                            <option value="1">Outbound lastmonth</option>
-                                            <option value="2">PO Creation Aex</option>
-
-
-                                        </select>
-
-
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            {isSavedSelected ? <div> <div className="col-md-12 " style={{ padding: "0px" }}>
-                                <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline mb-md-5" style={{ flexDirection: "row", display: "flex" }}>
-
-                                    <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-                                        <span class=" fw-small text-dark fs-6" >Description</span>
-                                    </div>
-
-                                    <div class="col-md-6 d-flex justify-content-start">
-
-
-                                        <span>Description of saved search</span>
-
-
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                                <div className=' border-bottom border-black' style={{ width: "98%", marginRight: "auto", marginLeft: "auto" }}></div>
-
-                                <div class=" col-md-12"  >
-
-                                    <div className=" col-md-12 mt-5 flex-d-row pe-5" style={{ paddingLeft: "0px", marginLeft: "0px", marginRight: "0px" }} >
-                                        <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline mb-md-5  flex-d-row"  >
-                                            <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-                                                <span class=" fw-small text-dark fs-6">Received Date From</span>
-                                            </div>
-
-                                            <div class="col-md-6 d-flex">
-
-                                                <DatePicker
-                                                    selected={startDate}
-                                                    onChange={handleStartDateChange}
-                                                    customInput={<CustomDatePickerInput />}
-                                                    dateFormat="dd-MMM-yyyy"
-                                                    disabled={!isEditable}
-                                                    style={{width:"100%"}}
-                                                    wrapperClassName='date-picker-custom-width'
-                                                    
-                                                    
-                                                />
-
-
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline mb-md-5  flex-d-row"   >
-                                            <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-                                                <span class="fw-small text-dark fs-6" >Received Date To </span>
-                                            </div>
-
-                                            <div className='col-md-6 d-flex'>
-
-
-                                                <DatePicker
-                                                    selected={endDate}
-                                                    onChange={handleEndDateChange}
-                                                    customInput={<CustomDatePickerInput />}
-                                                    dateFormat="dd-MMM-yyyy"
-                                                    disabled={!isEditable}
-                                                    wrapperClassName='date-picker-custom-width'
-                                                />
-
-
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5 flex-d-row align-items-baseline"   >
-                                            <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-                                                <span class="fw-small text-dark fs-6" >Message Type</span>
-                                            </div>
-                                            <div className='col-md-6'>
-                                                <select class="form-select" name="messageType" value={messageType} disabled={!isEditable}
-                                                    onChange={(e) => setMessageType(e.target.value)} aria-label="Select example" style={{ padding: "2px 5px", }}>
-                                                    <option>All</option>
-                                                    <option value="1">PO Creation</option>
-                                                    <option value="2">PO Ack</option>
-                                                    <option value="1">PO Shipment</option>
-                                                    <option value="2">PO Invoice</option>
-
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5  flex-d-row align-items-baseline"  >
-                                            <div class="px-2 col-md-6 d-flex justify-content-end">
-                                                <span class="fw-small text-dark fs-6" >Document ID</span>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="text" name="documentId" value={documentId} disabled={!isEditable}
-                                                    onChange={(e) => setDocumentId(e.target.value)} class="form-control" style={{ padding: "2px 2px", }} />
-                                            </div>
-
-                                        </div>
-
-
-                                    </div>
-
-
-
-                                    <div>
-
-                                        <div className='mx-4'>
-                                            <div className="row mb-1">
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`select1`}>Field</label>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`select2`}>Operator</label>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`input`}>Value</label>
-                                                </div>
-
-                                            </div>
-                                            {filterRows.map((row, index) => (
-                                                <div key={row.key} className="row mb-2">
-                                                    <div className="col-md-3">
-                                                        <select
-                                                            id={`select1_${row.key}`}
-                                                            className="form-select"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            value={row.value}
-                                                            disabled={!isEditable}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        >
-                                                            <option value="option1">Document ID</option>
-                                                            <option value="option2">Document Type</option>
-                                                            {/* Add more options as needed */}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <select
-                                                            id={`select2_${row.key}`}
-                                                            className="form-select"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            disabled={!isEditable}
-                                                            //  value={row.value}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        >
-                                                            <option value="Is Blank">Is Blank</option>
-                                                            <option value="Is Not Blank">Is Not Blank</option>
-                                                            <option value="Equals">Equals</option>
-                                                            <option value="Not Equals">Not Equals</option>
-                                                            <option value="Contains">Contains</option>
-                                                            <option value="Begins With">Begins With</option>
-                                                            {/* Add more options as needed */}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <input
-                                                            type="text"
-                                                            id={`input_${row.key}`}
-                                                            className="form-control"
-                                                            placeholder="Enter value"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            disabled={!isEditable}
-                                                            // value={row.value}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        />
-                                                    </div>
-                                                    {/* <div className="col-md-3" style={{ textAlign: 'left' }}>
-                                            <a className="btn btn-circle btn-primary" onClick={addFilterRow} style={{ padding: "2px 5px 3px 8px", marginTop: "-2px", borderRadius: '50%' }}>
-                                                <i className="fa fa-plus"></i>
-                                            </a>
-
-                                            <a
-                                                className={`btn btn-danger ml-2 ${index === 0 ? 'disabled-button' : ''}`}
-                                                onClick={() => index !== 0 && removeFilterRow(row.key)}
-                                                style={{ padding: "2px 5px 3px 8px", marginTop: "-2px", borderRadius: '50%' }}
-                                            >
-                                                <i className="fa fa-minus"></i>
-                                            </a>
-
-                                        
-
-                                        </div> */}
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                    </div>
-
-
-
-
-
-
-                                    {/* Actions Section Start */}
-
-                                    <div class=" flex-d-row pb-2 justify-content-end">
-                                        {/* <div class="col-md-6"></div> */}
-                                        <div class="flex-d-row" style={{ justifyContent: 'end' }} >
-                                            {/* <div class=" col-md-3" style={{ paddingTop: '10px ', textAlign: 'right' }}>
-                                    <span
-                                        style={{ textDecoration: "underline", fontSize: "1rem", cursor: "pointer" }}
-                                        onClick={toggleFilterType}
-                                    >
-                                        <a>{isAdvanced ? "Basic Filter" : "Advanced Filter"}</a>
-                                    </span></div> */}
-                                            <div class="mx-5 d-flex align-items-baseline justify-content-end" >
-                                            <span className='fw-semibold'
-                                            style={{ textDecoration: "underline", fontSize: "1rem", cursor: "pointer",marginTop:"auto" }}
-                                                onClick={SwitchDefaultsearch}
-                                            >
-                                                <a>Switch to Basic Search</a>
-                                            </span>
-                                                
-                                            </div>
-
-                                            <div class="mx-5 " >
-                                                {!isEditable ?
-                                                    <button href="#" class="btn btn-sm btn-light py-1" onClick={handleEditClick}>
-                                                        <i class="fa fa-edit fs-8"></i>
-                                                        Edit
-                                                    </button> : null}
-                                            </div>
-
-                                            <div class="mx-5 " >
-                                                {isEditable ? <button href="#" class="btn btn-sm btn-success py-1" data-bs-toggle="modal" data-bs-target="#myModal">
-                                                    <i class="fa fa-save fs-8"></i>
-                                                    Save as New
-                                                </button> : <button href="#" class="btn btn-sm btn-danger py-1" data-bs-toggle="modal" data-bs-target="#myModal">
-                                                    <i class="fa fa-trash fs-8"></i>
-                                                    Delete
-                                                </button>}
-
-
-                                            </div>
-
-                                            <div class="mx-5 " >
-                                                {isEditable ? <button href="#" class="btn btn-sm btn-primary py-1" >
-                                                    <i class="fa fa-pencil-square fs-8"></i>
-                                                    Update
-                                                </button> : <button href="#" class="btn btn-sm btn-primary py-1">
-                                                    <i class="ki-outline ki-magnifier fs-8"></i>
-                                                    Search
-                                                </button>}
-
-                                            </div>
-                                        </div>
-
-
-
-                                    </div>
-
-                                    {/* Actions Section End */}
-                                    {/* modal popup */}
-
-                                    {/* <!-- The Modal --> */}
-                                    <div class="modal" id="myModal">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <form class="form-horizontal" name="addsaveForm" role="form">
-                                                    {/* <!-- Modal Header --> */}
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title">Save Search</h4>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-
-                                                    {/* <!-- Modal body --> */}
-                                                    <div class="modal-body">
-                                                        <div class="form-group row mb-3">
-                                                            <label class="col-sm-4 control-label MoveRight">Name:</label>
-
-                                                            <div class="col-sm-8">
-                                                                <input type="text" required class="form-control" name="name"
-                                                                />
-
-
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="form-group row mb-3">
-                                                            <label class="col-sm-4 control-label MoveRight">Description:</label>
-
-                                                            <div class="col-sm-8">
-                                                                <textarea class="form-control" name="description"></textarea>
-
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Public" checked />
-                                                            <label class="form-check-label" for="inlineRadio1">Public</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Private" />
-                                                            <label class="form-check-label" for="inlineRadio2">Private</label>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* <!-- Modal footer --> */}
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary py-1" data-bs-dismiss="modal">Add</button>
-                                                        <button type="button" class="btn btn-danger py-1" data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/*End modal popup  */}
-
-
-
-                                </div>
-                            </div> : null}
-                        </div> : null}
-
-
-
-                    {/* Basic Filter */}
-
-                    {isSaved === false ?
+                        {isSaved === false ?
                         <div class="flex-d-row  " style={{ backgroundColor: "#e1ebf6" }} >
 
                             <form class="form-horizontal row col-md-12" name="messageTracingFilterForm" role="form" >
-                                <div className=" col-md-12 mt-5 flex-d-row pe-5" style={{ paddingLeft: "0px", marginLeft: "0px", marginRight: "0px" }} >
-                                    <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline mb-md-5  flex-d-row"  >
+                                <div className=" col-md-12 mt-5 flex-d-row pe-5 ps-5 justify-content-end" style={{ paddingLeft: "0px", marginLeft: "0px", marginRight: "0px" }} >
+                                    <div class="col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"  >
                                         <div class="px-2 col-md-6 d-flex float-right justify-content-end">
                                             <span class=" fw-small text-dark fs-6" >Received Date From</span>
                                         </div>
@@ -661,7 +335,7 @@ const formatDate = (date, addDate) => {
                                         <div class="col-md-6 d-flex">
 
                                             <DatePicker
-                                                selected={startDate}
+                                                selected={isCurrentZoneBehindUTC(startDate)}
                                                 onChange={handleStartDateChange}
                                                 customInput={<CustomDatePickerInput />}
                                                 dateFormat="dd-MMM-yyyy"
@@ -670,7 +344,7 @@ const formatDate = (date, addDate) => {
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 col-lg-4 col-xl-4 align-items-baseline mb-md-5  flex-d-row"   >
+                                    <div class="col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"   >
                                         <div class="px-2 col-md-6 d-flex float-right justify-content-end">
                                             <span class="fw-small text-dark fs-6" >Received Date To </span>
                                         </div>
@@ -679,7 +353,7 @@ const formatDate = (date, addDate) => {
 
 
                                             <DatePicker
-                                                selected={endDate}
+                                                selected={isCurrentZoneBehindUTC(endDate)}
                                                 onChange={handleEndDateChange}
                                                 customInput={<CustomDatePickerInput />}
                                                 dateFormat="dd-MMM-yyyy"
@@ -692,13 +366,13 @@ const formatDate = (date, addDate) => {
 
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5 flex-d-row align-items-baseline"   >
+                                    <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5 col-xs-4 flex-d-row align-items-baseline"   >
                                         <div class="px-2 col-md-6 d-flex float-right justify-content-end">
                                             <span class="fw-small text-dark fs-6 ">Message Type</span>
                                         </div>
                                         <div className='col-md-6'>
                                             <select class="form-select" name="messageType" value={messageType}
-                                                onChange={(e) => setMessageType(e.target.value)} aria-label="Select example" style={{ padding: "2px 5px",}}>
+                                                onChange={(e) => setMessageType(e.target.value)} aria-label="Select example" style={{ padding: "2px 5px", }}>
                                                 <option>All</option>
                                                 {MessageTypes.map((e, key) => {
                                                     return <option key={key} value={e.value}>{e.name}</option>;
@@ -728,91 +402,7 @@ const formatDate = (date, addDate) => {
 
 
 
-                                <div className='col-md-12'>
-                                    {isAdvanced ? (
-                                        <div className='col-md-12 mx-4'>
-                                            <div className="col-md-12 row mb-1">
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`select1`}>Field</label>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`select2`}>Operator</label>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <label className="form-label" htmlFor={`input`}>Value</label>
-                                                </div>
 
-                                            </div>
-                                            {filterRows.map((row, index) => (
-                                                <div key={row.key} className=" col-md-12 row mb-2">
-                                                    <div className="col-md-3">
-                                                        <select
-                                                            id={`select1_${row.key}`}
-                                                            className="form-select"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            value={row.value}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        >
-                                                            <option disabled value="">Select Field</option>
-                                                            {/* <option value="option1">Document ID</option>
-                                                <option value="option2">Document Type</option> */}
-                                                            {OptionalFields.map((e, key) => {
-                                                                return <option key={key} value={e.value}>{e.name}</option>;
-                                                            })}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <select
-                                                            id={`select2_${row.key}`}
-                                                            className="form-select"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            //  value={row.value}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        >
-                                                            <option disabled value="">Select Operator</option>
-                                                            <option value="Is Blank">Is Blank</option>
-                                                            <option value="Is Not Blank">Is Not Blank</option>
-                                                            <option value="Equals">Equals</option>
-                                                            <option value="Not Equals">Not Equals</option>
-                                                            <option value="Contains">Contains</option>
-                                                            <option value="Begins With">Begins With</option>
-                                                            {/* Add more options as needed */}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <input
-                                                            type="text"
-                                                            id={`input_${row.key}`}
-                                                            className="form-control"
-                                                            placeholder="Enter value"
-                                                            onChange={(e) => handleChange(row.key, e.target.value)}
-                                                            // value={row.value}
-                                                            aria-label="Select example" style={{ padding: "2px 5px", minWidth: "180px" }}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-3 d-flex align-items-center" style={{ textAlign: 'left' }}>
-                                                        <span className='' style={{ marginRight: "5px" }}> <a className=" btn-primary  align-items-center " onClick={addFilterRow} >
-                                                            <i className=" fa-circle-plus fa  fs-2 pe-0"></i>
-                                                        </a></span>
-
-
-                                                        <span>
-                                                            <a
-                                                                className={` btn-danger  ${index === 0 ? 'disabled-button' : ''}`}
-                                                                onClick={() => index !== 0 && removeFilterRow(row.key)}
-
-                                                            >
-                                                                <i className="fa fa-circle-minus fs-2  pe-0"></i>
-                                                            </a></span>
-
-
-
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : null}
-                                </div>
 
 
 
@@ -822,27 +412,13 @@ const formatDate = (date, addDate) => {
                                 <div class="justify-content-end flex-d-row mb-2 mt-2">
                                     {/* <div class="col-md-6"></div> */}
                                     <div class="flex-d-row" style={{ justifyContent: 'end' }} >
-                                        {/* <div class=" mx-5 d-flex align-items-baseline justify-content-end" >
-                                            <span
-                                            className='fw-semibold'
-                                                style={{ textDecoration: "underline", fontSize: "1rem", cursor: "pointer",marginTop:"auto" }}
-                                                onClick={toggleFilterType}
-                                            >
-                                                <a>{isAdvanced ? "Basic Filter" : "Advanced Filter"}</a>
-                                            </span>
-                                        </div> */}
+
                                         <div class=" mx-5" style={{ paddingLeft: '0px ', paddingRight: '0px ' }}>
                                             <button class="btn btn-sm btn-light py-1" onClick={Reset}>
                                                 <i class="ki-outline ki-arrows-circle fs-8"></i>
                                                 Reset
                                             </button></div>
-                                        {saveButton && (
-                                            <div class="mx-5 " style={{ paddingLeft: '0px ', paddingRight: '0px ' }}>
-                                                <button type="button" class="btn btn-sm btn-success py-1" data-bs-toggle="modal" data-bs-target="#myModal">
-                                                    <i class="fa fa-save fs-8"></i>
-                                                    Save
-                                                </button></div>
-                                        )}
+
                                         <div class=" mx-5" style={{ paddingLeft: '0px ', paddingRight: '0px ', width: '100px' }}>
                                             <button type="submit" class="btn btn-sm btn-primary py-1" onClick={handleSubmit}>
                                                 <i class="ki-outline ki-magnifier fs-8"></i>
@@ -855,68 +431,16 @@ const formatDate = (date, addDate) => {
                                 </div>
                             </form>
 
-                            {/* modal popup */}
 
-                            {/* <!-- The Modal --> */}
-                            <div class="modal" id="myModal">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <form class="form-horizontal" name="addsaveForm" role="form">
-                                            {/* <!-- Modal Header --> */}
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Save Search</h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-
-                                            {/* <!-- Modal body --> */}
-                                            <div class="modal-body">
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-sm-4 control-label MoveRight">Name:</label>
-
-                                                    <div class="col-sm-8">
-                                                        <input type="text" required class="form-control" name="name"
-                                                        />
-                                                    </div>
-
-                                                </div>
-                                                <div class="form-group row mb-3">
-                                                    <label class="col-sm-4 control-label MoveRight">Description:</label>
-
-                                                    <div class="col-sm-8">
-                                                        <textarea class="form-control" name="description"></textarea>
-
-                                                    </div>
-
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Public" checked />
-                                                    <label class="form-check-label" for="inlineRadio1">Public</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Private" />
-                                                    <label class="form-check-label" for="inlineRadio2">Private</label>
-                                                </div>
-                                            </div>
-
-                                            {/* <!-- Modal footer --> */}
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary py-1" data-bs-dismiss="modal">Add</button>
-                                                <button type="button" class="btn btn-danger py-1" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            {/*End modal popup  */}
 
 
 
                         </div>
                         : null}
-                </div>
-                : ''}
+                    </div>
+                    : ''}
 
-        </div >
+            </div >
     )
 }
 
