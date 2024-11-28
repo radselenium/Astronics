@@ -15,7 +15,7 @@ function MessageSummary(props) {
     //const [showSave, setshowSave] = useState(true);
 
     const [globalFilter, setGlobalFilter] = useState('');
-   
+
     const [overallStatus, setOverallStatus] = useState('');
     const dt = useRef(null);
 
@@ -83,41 +83,41 @@ function MessageSummary(props) {
     const MultiStatusFilter = (SourceselectValue, dateOption) => {
         let statuses = [];
         if (SourceselectValue === "All") {
-          if (dateOption === "Today") {
-            statuses = ["Dispatched", "Picked_up"];
-            return statuses;
-          }
-          statuses = ["Dispatched", "Picked_up", "Archived"];
+            if (dateOption === "Today") {
+                statuses = ["Dispatched", "Picked_up"];
+                return statuses;
+            }
+            statuses = ["Dispatched", "Picked_up", "Archived"];
         } else if (SourceselectValue === "ASTRONICS") {
-          if (dateOption === "Today") {
-            statuses = ["Dispatched"];
-            return statuses;
-          }
-          statuses = ["Dispatched", "Archived"];
+            if (dateOption === "Today") {
+                statuses = ["Dispatched"];
+                return statuses;
+            }
+            statuses = ["Dispatched", "Archived"];
         } else {
-          if (dateOption === "Today") {
-            statuses = ["Picked_up"];
-            return statuses;
-          }
-          statuses = ["Picked_up", "Archived"];
+            if (dateOption === "Today") {
+                statuses = ["Picked_up"];
+                return statuses;
+            }
+            statuses = ["Picked_up", "Archived"];
         }
         return statuses;
-      };
-    
-      var statuses = MultiStatusFilter(props.sourceselectValue, props.DateOption);
+    };
 
-    
+    var statuses = MultiStatusFilter(props.sourceselectValue, props.DateOption);
+
+
     return (
         <>
 
 
 
-                        
 
-                        <div>&nbsp;</div>
 
-                        {/*begin::Row*/}
-                        {/* <div class="row g-5 g-xl-10">
+            <div>&nbsp;</div>
+
+            {/*begin::Row*/}
+            {/* <div class="row g-5 g-xl-10">
 
                                
                                 <div class="col-xl-12 mb-5 mb-xl-2" style={{ marginTop: "5px" }}>
@@ -151,77 +151,70 @@ function MessageSummary(props) {
                                 </div>
                                 
                             </div> */}
-                        {/*end::Row*/}
+            {/*end::Row*/}
 
-                        {/*begin::Row*/}
-                        <div class="row g-5 g-xl-10 mb-xl-5 md-mb-5" id='messge-report-card'>
+            {/*begin::Row*/}
+            <div class="row g-5 g-xl-10 mb-xl-5 md-mb-5" id='messge-report-card'>
 
-                            {/*begin::Col*/}
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
+                {/*begin::Col*/}
+                <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
 
-                                {/*begin::Card widget 5*/}
-                                <div class=" card card-flush mb-xl-1 p-1 mb-1 shadow-sm" style={{}} id='message-card-1'>
-                                    {/*begin::Header*/}
-                                    <div class="card-header pt-5 justify-content-center">
-                                        {/*begin::Title*/}
-                                        <div class="card-title d-flex flex-column ">
-                                            {/*begin::Info*/}
-                                            <div class="d-flex align-items-center mb-md-5 ">
-                                                {/*begin::Amount*/}
-                                                  <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Total Messages</span>
-                                                {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">{props.sourceselectValue === "ASTRONICS" ? "Sent Messages": "Received Messages"}</span> */}
-                                                {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">
-  {props.sourceselectValue === "ASTRONICS" 
-    ? "Sent Messages" 
-    : props.sourceselectValue === "BOTH" 
-      ? "Total Messages" 
-      : "Received Messages"}
-</span> */}
-                                                {/*end::Amount*/}
+                    {/*begin::Card widget 5*/}
+                    <div class=" card card-flush mb-xl-1 p-1 mb-1 shadow-sm" style={{}} id='message-card-1'>
+                        {/*begin::Header*/}
+                        <div class="card-header pt-5 justify-content-center">
+                            {/*begin::Title*/}
+                            <div class="card-title d-flex flex-column ">
+                                {/*begin::Info*/}
+                                <div class="d-flex align-items-center mb-md-5 my-4">
+                                    {/*begin::Amount*/}
+                                    <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Total Messages</span>
+              
+                                    {/*end::Amount*/}
 
-                                            </div>
-                                            <div class="align-self-center">
-                                                {/*begin::Amount*/}
-                                                <Link
-                    to={{ pathname: "/messageTracing" }}
-                    state={{
-                        productType: props.productselectValue,
-                      messageSource: props.sourceselectValue,
-                      startDate: props.startDate,
-                      endDate: props.endDate,
-                      status: "All",
-                      
-                      isDirect: true,
-                    }}
-                  >
-                    <span class="fs-2hx fw-bold text-primary me-2 lh-1 ls-n2">
-                      {props.messages.incomingMessage}
-                    </span>
-                  </Link>
-                                                {/* <span class="fs-2hx fw-bold text-primary me-2 lh-1 ls-n2">{props.messages.incomingMessage}</span> */}
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            {/*end::Info*/}
-
-                                        </div>
-                                        {/*end::Title*/}
-                                    </div>
-                                    {/*end::Header*/}
-                                    {/*begin::Card body*/}
-                                    <div class="card-body d-flex align-items-end pt-0">
-
-                                    </div>
-                                    {/*end::Card body*/}
                                 </div>
-                                {/*end::Card widget 5*/}
+                                <div class="align-self-center">
+                                    {/*begin::Amount*/}
+                                    <Link
+                                        to={{ pathname: "/messageTracing" }}
+                                        state={{
+                                            productType: props.productselectValue,
+                                            messageSource: props.sourceselectValue,
+                                            startDate: props.startDate,
+                                            endDate: props.endDate,
+                                            status: "All",
 
+                                            isDirect: true,
+                                        }}
+                                    >
+                                        <span class="fs-2hx fw-bold text-primary me-2 lh-1 ls-n2">
+                                            {props.messages.incomingMessage}
+                                        </span>
+                                    </Link>
+                                    {/* <span class="fs-2hx fw-bold text-primary me-2 lh-1 ls-n2">{props.messages.incomingMessage}</span> */}
+                                    {/*end::Amount*/}
+
+                                </div>
+                                {/*end::Info*/}
 
                             </div>
-                            {/*end::Col*/}
+                            {/*end::Title*/}
+                        </div>
+                        {/*end::Header*/}
+                        {/*begin::Card body*/}
+                        <div class="card-body d-flex align-items-end pt-0">
 
-                            {/*begin::Col*/}
-                            {/* <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
+                        </div>
+                        {/*end::Card body*/}
+                    </div>
+                    {/*end::Card widget 5*/}
+
+
+                </div>
+                {/*end::Col*/}
+
+                {/*begin::Col*/}
+                {/* <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
 
                                 
                                 <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-2'>
@@ -257,195 +250,195 @@ function MessageSummary(props) {
 
 
                             </div> */}
-                            {/*end::Col*/}
-                            {/*begin::Col*/}
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-6 mb-md-5 mb-xl-5 message-count-card">
+                {/*end::Col*/}
+                {/*begin::Col*/}
+                <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card">
 
-                                {/*begin::Card widget 5*/}
-                                <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-3'>
-                                    {/*begin::Header*/}
-                                    <div class="card-header pt-5 justify-content-center">
-                                        {/*begin::Title*/}
-                                        <div class="card-title d-flex flex-column ">
-                                            {/*begin::Info*/}
-                                            <div class="d-flex align-items-center mb-md-5 ">
-                                                {/*begin::Amount*/}
-                                                <span class="fs-2x fw-normal text-dark lh-1 ls-n2">Processed Messages</span>
-                                                {/* <span class="fs-2x fw-normal text-dark lh-1 ls-n2">Picked Up</span> */}
-                                                {/*end::Amount*/}
+                    {/*begin::Card widget 5*/}
+                    <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-3'>
+                        {/*begin::Header*/}
+                        <div class="card-header pt-5 justify-content-center">
+                            {/*begin::Title*/}
+                            <div class="card-title d-flex flex-column ">
+                                {/*begin::Info*/}
+                                <div class="d-flex align-items-center mb-md-5 my-4">
+                                    {/*begin::Amount*/}
+                                    <span class="fs-2x fw-normal text-dark lh-1 ls-n2 textsize">Processed Messages</span>
+                                    {/* <span class="fs-2x fw-normal text-dark lh-1 ls-n2">Picked Up</span> */}
+                                    {/*end::Amount*/}
 
-                                            </div>
-                                            <div class="align-self-center">
-                                                {/*begin::Amount*/}
-                                                {/* <span class="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">{props.messages.processedMessages}</span> */}
-                                                <Link
-                    to={{ pathname: "/messageTracing" }}
-                    state={{
-                        productType: props.productselectValue,
-                      messageSource: props.sourceselectValue,
-                      startDate: props.startDate,
-                      endDate: props.endDate,
-                      status: statuses,
-                      isDirect: true,
-                    }}
-                  >
-                                                <span className="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">       
-                                                {
-        props.sourceselectValue === "All"
-            ? Number(props.messages.processedMessages || 0) + 
-              Number(props.messages.dispatchedMessages || 0) + 
-              Number(props.messages.archivedMessages || 0)
-            : props.sourceselectValue === "ASTRONICS"
-                ? Number(props.messages.dispatchedMessages || 0) + 
-                  Number(props.messages.archivedMessages || 0)
-                : Number(props.messages.processedMessages || 0) + 
-                  Number(props.messages.archivedMessages || 0)
-    }
-            </span>
-            </Link>
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            {/*end::Info*/}
-
-                                        </div>
-                                        {/*end::Title*/}
-                                    </div>
-                                    {/*end::Header*/}
-                                    {/*begin::Card body*/}
-                                    <div class="card-body d-flex align-items-end pt-0">
-
-                                    </div>
-                                    {/*end::Card body*/}
                                 </div>
-                                {/*end::Card widget 5*/}
+                                <div class="align-self-center">
+                                    {/*begin::Amount*/}
+                                    {/* <span class="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">{props.messages.processedMessages}</span> */}
+                                    <Link
+                                        to={{ pathname: "/messageTracing" }}
+                                        state={{
+                                            productType: props.productselectValue,
+                                            messageSource: props.sourceselectValue,
+                                            startDate: props.startDate,
+                                            endDate: props.endDate,
+                                            status: statuses,
+                                            isDirect: true,
+                                        }}
+                                    >
+                                        <span className="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">
+                                            {
+                                                props.sourceselectValue === "All"
+                                                    ? Number(props.messages.processedMessages || 0) +
+                                                    Number(props.messages.dispatchedMessages || 0) +
+                                                    Number(props.messages.archivedMessages || 0)
+                                                    : props.sourceselectValue === "ASTRONICS"
+                                                        ? Number(props.messages.dispatchedMessages || 0) +
+                                                        Number(props.messages.archivedMessages || 0)
+                                                        : Number(props.messages.processedMessages || 0) +
+                                                        Number(props.messages.archivedMessages || 0)
+                                            }
+                                        </span>
+                                    </Link>
+                                    {/*end::Amount*/}
 
+                                </div>
+                                {/*end::Info*/}
 
                             </div>
-                            {/*end::Col*/}
-
-                            {/*begin::Col*/}
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-6 mb-md-5 mb-xl-5 message-count-card mt-5">
-
-                                {/*begin::Card widget 5*/}
-                                <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1"  id='message-card-4'>
-                                    {/*begin::Header*/}
-                                    <div class="card-header pt-5 justify-content-center">
-                                        {/*begin::Title*/}
-                                        <div class="card-title d-flex flex-column ">
-                                            {/*begin::Info*/}
-                                            <div class="d-flex align-items-center mb-md-5 ">
-                                                {/*begin::Amount*/}
-                                                {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">In Queue</span> */}
-                                                {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Awaiting Pickup</span> */}
-                                                <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Awaiting Processing</span>
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            <div class="align-self-center">
-                                                {/*begin::Amount*/}
-                                                <Link
-                    to={{ pathname: "/messageTracing" }}
-                    state={{
-                        productType: props.productselectValue,
-                      messageSource: props.sourceselectValue,
-                      startDate: props.startDate,
-                      endDate: props.endDate,
-                      status: "Awaiting_pickup",
-                      isDirect: true,
-                    }}
-                  >
-                                                <span class="fs-2hx fw-bold text-warning me-2 lh-1 ls-n2">{props.messages.inQueue}</span>
-                                                </Link>
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            {/*end::Info*/}
-
-                                        </div>
-                                        {/*end::Title*/}
-                                    </div>
-                                    {/*end::Header*/}
-                                    {/*begin::Card body*/}
-                                    <div class="card-body d-flex align-items-end pt-0">
-
-                                    </div>
-                                    {/*end::Card body*/}
-                                </div>
-                                {/*end::Card widget 5*/}
-
-
-                            </div>
-                            {/*end::Col*/}
-
-                            {/*begin::Col*/}
-
-                            <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-6 col-sm-6 mb-md-5 mb-xl-5 message-count-card mt-5">
-                                {/*begin::Card widget 5*/}
-                                <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1"  id='message-card-5'>
-                                    {/*begin::Header*/}
-                                    <div class="card-header pt-5 justify-content-center">
-                                        {/*begin::Title*/}
-                                        <div class="card-title d-flex flex-column ">
-                                            {/*begin::Info*/}
-                                            <div class="d-flex align-items-center mb-md-5 ">
-                                                {/*begin::Amount*/}
-                                                <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Failed Processing</span>
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            <div class="align-self-center">
-                                                {/*begin::Amount*/}
-                                                <Link
-                    to={{ pathname: "/messageTracing" }}
-                    state={{
-                        productType: props.productselectValue,
-                      messageSource: props.sourceselectValue,
-                      startDate: props.startDate,
-                      endDate: props.endDate,
-                      status: "Failed",
-                      isDirect: true,
-                    }}
-                  >
-                                                <span class="fs-2hx fw-bold text-danger me-2 lh-1 ls-n2">{props.messages.failedProcessing}</span>
-                                                </Link>
-                                                {/*end::Amount*/}
-
-                                            </div>
-                                            {/*end::Info*/}
-
-                                        </div>
-                                        {/*end::Title*/}
-                                    </div>
-                                    {/*end::Header*/}
-                                    {/*begin::Card body*/}
-                                    <div class="card-body d-flex align-items-end pt-0">
-
-                                    </div>
-                                    {/*end::Card body*/}
-                                </div>
-                                {/*end::Card widget 5*/}
-                            </div>
-                            {/*end::Col*/}
-
-
-                          
+                            {/*end::Title*/}
+                        </div>
+                        {/*end::Header*/}
+                        {/*begin::Card body*/}
+                        <div class="card-body d-flex align-items-end pt-0">
 
                         </div>
-                        {/*end::Row*/}
-
-                        {/* Start message Report */}
-                       
-                        
-
-                        {/* End message Report */}
+                        {/*end::Card body*/}
+                    </div>
+                    {/*end::Card widget 5*/}
 
 
+                </div>
+                {/*end::Col*/}
+
+                {/*begin::Col*/}
+                <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
+
+                    {/*begin::Card widget 5*/}
+                    <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-4'>
+                        {/*begin::Header*/}
+                        <div class="card-header pt-5 justify-content-center">
+                            {/*begin::Title*/}
+                            <div class="card-title d-flex flex-column ">
+                                {/*begin::Info*/}
+                                <div class="d-flex align-items-center mb-md-5 my-4">
+                                    {/*begin::Amount*/}
+                                    {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">In Queue</span> */}
+                                    {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Awaiting Pickup</span> */}
+                                    <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Awaiting Processing</span>
+                                    {/*end::Amount*/}
+
+                                </div>
+                                <div class="align-self-center">
+                                    {/*begin::Amount*/}
+                                    <Link
+                                        to={{ pathname: "/messageTracing" }}
+                                        state={{
+                                            productType: props.productselectValue,
+                                            messageSource: props.sourceselectValue,
+                                            startDate: props.startDate,
+                                            endDate: props.endDate,
+                                            status: "Awaiting_pickup",
+                                            isDirect: true,
+                                        }}
+                                    >
+                                        <span class="fs-2hx fw-bold text-warning me-2 lh-1 ls-n2">{props.messages.inQueue}</span>
+                                    </Link>
+                                    {/*end::Amount*/}
+
+                                </div>
+                                {/*end::Info*/}
+
+                            </div>
+                            {/*end::Title*/}
+                        </div>
+                        {/*end::Header*/}
+                        {/*begin::Card body*/}
+                        <div class="card-body d-flex align-items-end pt-0">
+
+                        </div>
+                        {/*end::Card body*/}
+                    </div>
+                    {/*end::Card widget 5*/}
+
+
+                </div>
+                {/*end::Col*/}
+
+                {/*begin::Col*/}
+
+                <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
+                    {/*begin::Card widget 5*/}
+                    <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-5'>
+                        {/*begin::Header*/}
+                        <div class="card-header pt-5 justify-content-center">
+                            {/*begin::Title*/}
+                            <div class="card-title d-flex flex-column ">
+                                {/*begin::Info*/}
+                                <div class="d-flex align-items-center mb-md-5 my-4">
+                                    {/*begin::Amount*/}
+                                    <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Failed Processing</span>
+                                    {/*end::Amount*/}
+
+                                </div>
+                                <div class="align-self-center">
+                                    {/*begin::Amount*/}
+                                    <Link
+                                        to={{ pathname: "/messageTracing" }}
+                                        state={{
+                                            productType: props.productselectValue,
+                                            messageSource: props.sourceselectValue,
+                                            startDate: props.startDate,
+                                            endDate: props.endDate,
+                                            status: "Failed",
+                                            isDirect: true,
+                                        }}
+                                    >
+                                        <span class="fs-2hx fw-bold text-danger me-2 lh-1 ls-n2">{props.messages.failedProcessing}</span>
+                                    </Link>
+                                    {/*end::Amount*/}
+
+                                </div>
+                                {/*end::Info*/}
+
+                            </div>
+                            {/*end::Title*/}
+                        </div>
+                        {/*end::Header*/}
+                        {/*begin::Card body*/}
+                        <div class="card-body d-flex align-items-end pt-0">
+
+                        </div>
+                        {/*end::Card body*/}
+                    </div>
+                    {/*end::Card widget 5*/}
+                </div>
+                {/*end::Col*/}
 
 
 
-                        {/*end::Content*/}
-                        </>          
+
+            </div>
+            {/*end::Row*/}
+
+            {/* Start message Report */}
+
+
+
+            {/* End message Report */}
+
+
+
+
+
+            {/*end::Content*/}
+        </>
     )
 }
 

@@ -20,6 +20,7 @@ const CustomFilter = (props) => {
     const [endDate, setEndDate] = useState(new Date());
     //const [messagesperType, setmessagesPerType] = useState([]);
     //const [messagesPerDay, setmessagesperDay] = useState([]);
+    const [HandleChange, setHandleChange] = useState(false);
     const messageType = {
         incomingMessage: 0,
         recievedMessages: 0,
@@ -39,7 +40,21 @@ const CustomFilter = (props) => {
 
     const handleEndDateChange = (date) => {
         // date.setUTCHours(23, 59, 59, 999);
+        setHandleChange(true);
         setEndDate(date);
+    };
+
+    const isCurrentZoneBehindUTC = (date) => {
+        // Get the time string with the UTC offset in the specified time zone
+        console.log(date);
+        let offsetMinutes = new Date().getTimezoneOffset();
+        if (offsetMinutes > 0) {
+            const LocalDateTime = new Date(date);
+            console.log(LocalDateTime);
+            LocalDateTime.setHours(LocalDateTime.getHours() + 13);
+            return LocalDateTime;
+        }
+        return date;
     };
 
     const CustomDatePickerInput = ({ value, onClick }) => (
@@ -69,7 +84,7 @@ const CustomFilter = (props) => {
         console.log(setproductSelectValue(value));
         setproductSelectValue(value);
         setproductSelectValue(value);
-       // props.setproductSelectValue(value);
+        // props.setproductSelectValue(value);
     };
 
     const SourceonChange = (event) => {
@@ -80,28 +95,28 @@ const CustomFilter = (props) => {
         SourcesetSelectValue(value);
         props.SourcesetSelectValue(value);
     };
-    const InitialRender =useRef(1);
+    const InitialRender = useRef(1);
     const DateRangeonChange = (event) => {
         const value1 = event.target.value;
         setCustomDate(value1);
         console.log(value1);
         props.setDateSelectValue(value1);
 
-        if(CustomDate == 'Custom'){
+        if (value1 == "Custom" && !InitialRender.current) {
             setStartDate(subMonths(new Date(), 1))
             const EndDate = new Date();
-            EndDate.setUTCHours(23,59,59,999);
+            EndDate.setUTCHours(23, 59, 59, 999);
             EndDate.setDate(EndDate.getDate() - 1)
             setEndDate(EndDate);
         }
-        
-        if(InitialRender && CustomDate =='Custom'){
+
+        if (InitialRender.current && CustomDate == 'Custom') {
             getTimeRange(value1, InitialRender);
             InitialRender.current = 0;
             return;
         }
-        getTimeRange(value1,InitialRender)
-       // getTimeRange(value1, 1)
+        getTimeRange(value1, InitialRender)
+        // getTimeRange(value1, 1)
     };
     const getTimeRange = (selectValue, isInitial) => {
         console.log(sourceselectValue);
@@ -116,7 +131,7 @@ const CustomFilter = (props) => {
         const epochDate = new Date(0);
         // console.log(epochDate); // Pass 0 as the timestamp to represent the epoch time
         console.log(epochDate.toISOString());
-        var ProductTypeValue="";
+        var ProductTypeValue = "";
         var MessageSourceValue = "";
         var SetDateValue = "";
         var StartDate = "";
@@ -125,8 +140,8 @@ const CustomFilter = (props) => {
         var formattedEndDate = "";
 
         props.SourcesetSelectValue(MessageSource);
-    props.setDateSelectValue(selectValue);
-    props.setproductSelectValue(productselectValue)
+        props.setDateSelectValue(selectValue);
+        props.setproductSelectValue(productselectValue)
 
         if (ProductSource == "AeroBuy") {
             ProductTypeValue = ProductSource;
@@ -168,43 +183,43 @@ const CustomFilter = (props) => {
         //     const formdata = {
         //         formattedStartDate: formattedStartDate,
         //         formattedEndDate: formattedEndDate,
-                
+
         //     }
-          
+
         //     if (MessageSource !== "BOTH") {
         //         formdata.xmlMessageSource = MessageSource; // Add xmlMessageSource property
         //     }
-            
+
         //     getRecords(formdata, selectValue)
-           
+
 
         // } 
         if (selectValue === "Today") {
-           // props.setmessagesPerDay([]);
+            // props.setmessagesPerDay([]);
             props.setShowDayChart(true);
-        
+
             // Set start of today
             const StartDate = new Date();
             StartDate.setUTCHours(0, 0, 0, 0); // Start of today (UTC 00:00:00)
             const formattedStartDate = StartDate.toISOString();
-        
+
             // Set end of today
             const EndDate = new Date();
             EndDate.setUTCHours(23, 59, 59, 999); // End of today (UTC 23:59:59)
             const formattedEndDate = EndDate.toISOString();
-        
+
             console.log("Start Date:", formattedStartDate);
             console.log("End Date:", formattedEndDate);
 
             props.setStartDate(formattedStartDate);
             props.setEndDate(formattedEndDate);
-        
+
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
                 // xmlMessageSource: MessageSource
             };
-        
+
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
             if (MessageSource !== "All") {
                 formdata.xmlMessageSource = MessageSource;
@@ -212,11 +227,11 @@ const CustomFilter = (props) => {
             if (ProductSource !== "All") {
                 formdata.productType = ProductSource;
             }
-        
+
             // Send form data to getRecords function
             getRecords(formdata, selectValue);
         }
-        
+
         else if (selectValue == "Last7Days") {
             props.setShowDayChart(true)
             SetDateValue = DateRangeValue;
@@ -314,7 +329,8 @@ const CustomFilter = (props) => {
             console.log("Start of the month:", formattedStartDate);
 
             // Find the end of the current month (last day)
-            EndDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); // 0 gives the last day of the previous month
+            //EndDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); // 0 gives the last day of the previous month
+            const EndDate = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 0)); 
             EndDate.setUTCHours(23, 59, 59, 999); // End of the day
             formattedEndDate = EndDate.toISOString();
             console.log("End of the month:", formattedEndDate);
@@ -406,6 +422,11 @@ const CustomFilter = (props) => {
             const EndCustomDate = endDate;
             console.log(startDate);
             console.log(endDate);
+            const offminutes = new Date().getTimezoneOffset(); // for utc negative regions
+            if (offminutes > 0 && HandleChange) {
+                EndCustomDate.setDate(EndCustomDate.getDate() - 1);       // for utc negative regions
+                setHandleChange(false);
+            }
             StartCustomDate.setUTCHours(0, 0, 0, 0);
             EndCustomDate.setUTCHours(23, 59, 59, 999);
             console.log(isInitial.current);
@@ -492,13 +513,13 @@ const CustomFilter = (props) => {
 
     const flag = useRef(true);
     useEffect(() => {
-      if (flag.current) {
-        getTimeRange(props.dateSelectValue, 1);
-        flag.current = false;
-        return;
-      }
-      getTimeRange(props.dateSelectValue, 0);
-    }, [sourceselectValue,productselectValue]);
+        if (flag.current) {
+            getTimeRange(props.dateSelectValue, 1);
+            flag.current = false;
+            return;
+        }
+        getTimeRange(props.dateSelectValue, 0);
+    }, [sourceselectValue, productselectValue]);
 
     const getRecords = (formdata, selectValue) => {
         // HttpClient.post(
@@ -586,7 +607,7 @@ const CustomFilter = (props) => {
             }
 
         })
-        if (selectValue == 'Last7Days'|| 'Today') {
+        if (selectValue == 'Last7Days' || 'Today') {
             HttpClient.get('/api/getAllMessagePerDayCount/findByAggregateQueryMessagePerDay', { params: formdata }).then(function (response) {
                 console.log(response)
                 console.log(response.data);
@@ -617,104 +638,98 @@ const CustomFilter = (props) => {
     }
     return (
         <>
-            <div class="card-custom-border card flex-d-row justify-content-end py-2 px-5" id="custom-search-bar">
-                <div className=' flex-d-row align-items-center justify-content-end'>
-                    <div className=" flex-d-row mx-5">
-                        {/* <!-- First Dropdown for Message Source --> */}
-
-                        <div className='px-3 d-flex align-items-center'>
-                            <label for="selectDropdown2" className="fs-5 fw-semibold">Product:</label>
-                        </div>
-                        <div>
-                            <select class="form-select" id="selectDropdown2" style={{ padding: "2px 5px", minWidth: "120px" }} onChange={ProductonChange}>
-                                <option value="All">All</option>
-                                <option value="AeroBuy">AeroBuy</option>
-                                <option value="AeroRepair">AeroRepair</option>
-                               
-
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div className=" flex-d-row mx-5">
-                        {/* <!-- First Dropdown for Message Source --> */}
-
-                        <div className='px-3 d-flex align-items-center'>
-                            <label for="selectDropdown1" className="fs-5 fw-semibold">Source:</label>
-                        </div>
-                        <div>
-                            <select class="form-select" id="selectDropdown1" style={{ padding: "2px 5px", minWidth: "120px" }} onChange={SourceonChange}>
-                                <option value="All">All</option>
-                                <option value="ASTRONICS">Astronics</option>
-                                <option value="AEX">Aex</option>
-                                
-
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div className=" flex-d-row ms-5">
-                        {/* <!-- Second Dropdown for Time Range--> */}
-                        <div className='px-3 d-flex align-items-center'>
-                            <label for="selectDropdown2" className="fs-5 fw-semibold">Date Range:</label>
-                        </div>
-                        <div>
-                            <select class="form-select form-control" id="selectDropdown2" style={{ padding: "2px 5px", minWidth: "120px" }} onChange={DateRangeonChange}>
-                                {/* <option value="All">All</option> */}
-                                <option value="Today">Today</option>
-                                <option value="Last7Days">Last 7 Days</option>
-                                <option value="CurrentWeek">Current Week</option>
-                                <option value="CurrentMonth">Current Month</option>
-                                {/* <option value="LastMonth">Last Month</option> */}
-                                <option value="Custom" >Custom</option>
-
-                            </select>
-                        </div>
-                    </div>
-                </div>
+         <div className="card-custom-border card flex-d-row justify-content-start py-2 px-5" id="custom-search-bar">
+    <div className="flex-d-row align-items-center justify-content-start gap-2">
+        
+        {/* Product Dropdown */}
+        <div className="flex-d-row mx-1 align-items-center">
+            <div className="px-3 label-container">
+                <label htmlFor="selectDropdown2" className="fs-5 fw-semibold">Product:</label>
             </div>
+            <div>
+                <select className="form-select" id="selectDropdown2" style={{ padding: "2px 5px", minWidth: "130px" }} onChange={ProductonChange}>
+                    <option value="All">All</option>
+                    <option value="AeroBuy">AeroBuy</option>
+                    <option value="AeroRepair">AeroRepair</option>
+                </select>
+            </div>
+        </div>
+
+        {/* Source Dropdown */}
+        <div className="flex-d-row mx-1 align-items-center">
+            <div className="px-3 label-container">
+                <label htmlFor="selectDropdown1" className="fs-5 fw-semibold">Source:</label>
+            </div>
+            <div>
+                <select className="form-select" id="selectDropdown1" style={{ padding: "2px 5px", minWidth: "130px" }} onChange={SourceonChange}>
+                    <option value="All">All</option>
+                    <option value="ASTRONICS">Astronics</option>
+                    <option value="AEX">Aex</option>
+                </select>
+            </div>
+        </div>
+
+        {/* Date Range Dropdown */}
+        <div className="flex-d-row mx-1 align-items-center">
+            <div className="px-3 label-container">
+                <label htmlFor="selectDropdown3" className="fs-5 fw-semibold">Date Range:</label>
+            </div>
+            <div>
+                <select className="form-select" id="selectDropdown3" style={{ padding: "2px 5px", minWidth: "130px" }} onChange={DateRangeonChange}>
+                    <option value="Today">Today</option>
+                    <option value="Last7Days">Last 7 Days</option>
+                    <option value="CurrentWeek">Current Week</option>
+                    <option value="CurrentMonth">Current Month</option>
+                    <option value="Custom">Custom</option>
+                </select>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
 
-            {CustomDate === "Custom" && <div class="card-custom-border card flex-d-row justify-content-end py-2 px-3 mt-3" id="custom-search-bar">
-                <div className='col-5 flex-d-row align-items-center justify-content-center'>
-                    {/* <div class="px-2 col-md-6 d-flex float-right justify-content-end">
-            <span class=" fw-small text-dark fs-6">Received Date From</span>
-        </div> */}
 
-                    <div class="col-md-5 d-flex justify-content-end">
+            {CustomDate === "Custom" && (
+    <div className="card-custom-border card flex-d-row align-items-start py-2 px-3 mt-3" id="custom-search-bar1">
+        <div className="col-12 flex-d-row align-items-center gap-3">
+            {/* Start Date */}
+            <div className="col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2">
+                <label className="fw-small text-dark fs-6 col-sm-3 col-md-4 col-lg-4 col-xl-4 labelright">Start Date:</label>
+                <DatePicker
+                    selected={isCurrentZoneBehindUTC(startDate)}
+                    onChange={handleStartDateChange}
+                    customInput={<CustomDatePickerInput />}
+                    dateFormat="dd-MMM-yyyy"
+                    wrapperClassName="date-picker-custom-width"
+                    // minDate={startDate}
+                />
+            </div>
+            
+            {/* End Date */}
+            <div className="col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2">
+                <label className="fw-small text-dark fs-6 col-sm-3 col-md-4 col-lg-4 col-xl-4 labelright">End Date:</label>
+                <DatePicker
+                    selected={isCurrentZoneBehindUTC(endDate)}
+                    onChange={handleEndDateChange}
+                    customInput={<CustomDatePickerInput />}
+                    dateFormat="dd-MMM-yyyy"
+                    wrapperClassName="date-picker-custom-width"
+                />
+            </div>
+            
+            {/* Search Button */}
+            <div className="col-sm-12 col-md-2 col-lg-3 col-xl-3 d-flex align-items-center">
+                <button href="#" className="btn btn-primary btn-sm " onClick={() => getTimeRange("Custom", 0)}>
+                    <i className="ki-outline ki-magnifier fs-8"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+    </div>
+)}
 
-                        <DatePicker
-                            selected={startDate}
-                            onChange={handleStartDateChange}
-                            customInput={<CustomDatePickerInput />}
-                            dateFormat="dd-MMM-yyyy"
-                            style={{ width: "100%" }}
-                            wrapperClassName='date-picker-custom-width'
-                           // minDate={startDate}
-                        />
-                    </div>
-                    <div class="col-md-5 d-flex justify-content-end">
 
-                        <DatePicker
-                            selected={endDate}
-                            onChange={handleEndDateChange}
-                            customInput={<CustomDatePickerInput />}
-                            dateFormat="dd-MMM-yyyy"
-                            style={{ width: "100%" }}
-                            wrapperClassName='date-picker-custom-width'
-
-                        />
-                    </div>
-                    <div class="col-md-2 d-flex justify-content-end">
-                        <button href="#" class="btn btn-primary btn-sm" onClick={() => getTimeRange("Custom", 0)}>
-                            <i class="ki-outline ki-magnifier fs-8"></i>
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </div>}
         </>
     )
 }

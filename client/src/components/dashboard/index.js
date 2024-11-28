@@ -180,7 +180,7 @@ const Dashboard = () => {
 									<MessageSummary messages={messages}  sourceselectValue={sourceselectValue} startDate={startDate} endDate={endDate}  DateOption={dateSelectValue} productselectValue={productselectValue} />
 								</div>
 								{isChartOpen && (
-								<div className='mt-mb-10 mt-xl-10 mt-10'>
+								<div className='mt-mb-10 mt-xl-1 mt-md-5 mt-10'>
 									<MessagingReport messages={messages} messagesPerType={messagesPerType} messagesPerDay={messagesPerDay} showDayChart={showDayChart} sourceselectValue={sourceselectValue}/>
 								</div>
 								)}
