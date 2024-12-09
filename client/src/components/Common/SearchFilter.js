@@ -209,7 +209,7 @@ const SearchFilter = (props) => {
         //var getDocumentId = documentId??documentId;
 
         if (getStartDate > getEndDate) {
-            toast("Invalid Start Date", {
+            toast("Received Date From cannot be greater than Received Date To.", {
                 position: "top-right",
                 type: "error"
             })
@@ -326,13 +326,13 @@ const SearchFilter = (props) => {
                         <div class="flex-d-row  " style={{ backgroundColor: "#e1ebf6" }} >
 
                             <form class="form-horizontal row col-md-12" name="messageTracingFilterForm" role="form" >
-                                <div className=" col-md-12 mt-5 flex-d-row pe-5 ps-5 justify-content-end" style={{ paddingLeft: "0px", marginLeft: "0px", marginRight: "0px" }} >
-                                    <div class="col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"  >
-                                        <div class="px-2 col-md-6 d-flex float-right justify-content-end">
+                                <div className=" col-md-12 mt-5 flex-d-row pe-5 ps-5 justify-content-end " style={{ paddingLeft: "0px", marginLeft: "0px", marginRight: "0px" }} >
+                                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"  >
+                                        <div class="px-2 col-6 col-md-6 d-flex float-right justify-content-end msgtracefilter">
                                             <span class=" fw-small text-dark fs-6" >Received Date From</span>
                                         </div>
 
-                                        <div class="col-md-6 d-flex">
+                                        <div class="col-6 col-md-6 d-flex">
 
                                             <DatePicker
                                                 selected={isCurrentZoneBehindUTC(startDate)}
@@ -344,12 +344,12 @@ const SearchFilter = (props) => {
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"   >
-                                        <div class="px-2 col-md-6 d-flex float-right justify-content-end">
+                                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 col-xs-4 align-items-baseline mb-md-5  flex-d-row"   >
+                                        <div class="px-2 col-6 col-md-6 d-flex float-right justify-content-end msgtracefilter">
                                             <span class="fw-small text-dark fs-6" >Received Date To </span>
                                         </div>
 
-                                        <div className='col-md-6 d-flex' >
+                                        <div className='col-6 col-md-6 d-flex' >
 
 
                                             <DatePicker
@@ -366,11 +366,11 @@ const SearchFilter = (props) => {
 
                                         </div>
                                     </div>
-                                    <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5 col-xs-4 flex-d-row align-items-baseline"   >
-                                        <div class="px-2 col-md-6 d-flex float-right justify-content-end">
+                                    <div class="col-12 col-md-4 col-lg-4 col-xl-4 mb-md-5 col-xs-4 flex-d-row align-items-baseline"   >
+                                        <div class="px-2 col-6 col-md-6 d-flex float-right justify-content-end msgtracefilter">
                                             <span class="fw-small text-dark fs-6 ">Message Type</span>
                                         </div>
-                                        <div className='col-md-6'>
+                                        <div className='col-6 col-md-6'>
                                             <select class="form-select" name="messageType" value={messageType}
                                                 onChange={(e) => setMessageType(e.target.value)} aria-label="Select example" style={{ padding: "2px 5px", }}>
                                                 <option>All</option>
@@ -409,7 +409,7 @@ const SearchFilter = (props) => {
 
 
 
-                                <div class="justify-content-end flex-d-row mb-2 mt-2">
+                                <div class="justify-content-end flex-d-row mb-2 mt-2 msgtracefilter-btn">
                                     {/* <div class="col-md-6"></div> */}
                                     <div class="flex-d-row" style={{ justifyContent: 'end' }} >
 
