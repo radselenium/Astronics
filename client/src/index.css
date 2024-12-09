@@ -35,6 +35,10 @@ code {
     text-align: right;
     padding-right: 10px !important;
   }
+  .dashboard-filter>label{
+    justify-content: flex-end !important;
+    display: flex !important;
+  }
 }
 
 @media (min-width: 1024px) and (max-width:1280px){
@@ -47,6 +51,7 @@ code {
   }
 }
 
+/* reduced the fontsize in dashboard page for status count widget */
 @media (min-width: 992px) and (max-width: 1280px) {
 
   .textsize{
@@ -56,22 +61,29 @@ code {
   #custom-search-bar1 .col-lg-4,
     #custom-search-bar1 .col-xl-4,
     #custom-search-bar1 .col-md-4 {
-        flex: 0 0 35%; /* Adjust the width as needed */
+        flex: 0 0 30%; /* Adjust the width as needed */
         max-width: 30%; /* Match the flex width */
         text-align: right;
     }
 }
 
+
+/* reduced the fontsize in dashboard page for status count widget */
 @media (max-width: 1280px) {
 
   .textsize{
     font-size: 24px !important;
-  }
-
-    
+  }   
     
 }
-
+/* reduced the fontsize in dashboard page for status count widget */
+@media (width: 1024px) {
+  .textsize {
+    font-size: 18px !important;
+   
+  }
+}
+/* custom date picker width and label adjusted in dashboard page */
 @media (min-width: 1600px) and (max-width:1920px){
   #custom-search-bar .date-picker-custom-width {
       max-width: 150px; /* Adjust as needed */
@@ -82,6 +94,64 @@ code {
   }
 }
 
+@media only screen and (max-width: 576px) {
+  /* right side menubar icon is hiding in mobile view */
+  .iconhide
+    {
+      display: none !important;
+    
+  }
+/* username display reduced font-size in mobile view */
+  .mobileText {
+    font-size: 12px !important;
+  }
+/* msg tracing page for mobile view adjusted the content  */
+  .msgtracefilter{
+    justify-content: start !important;
+    padding: 10px 0;
+  }
+  .msgtracefilter-btn{
+    justify-content: center !important;
+  }
+  /* dashboard page for mobile view adjusted the content  */
+  .dashboard-filter{
+    justify-content: center !important;
+  }
+}
 
+/* label adjusted for custom datefilter in mobile view */
+@media  (min-width: 769px) and (max-width:1023px){
+  .dashboard-filter>label{
+    justify-content: flex-end !important;
+    display:flex !important;
+  }
+}
 
-
+/* mobile view menubar showing and hiding in the ui */
+@media screen and (max-width: 576px) {
+  .app-header .app-header-mobile-drawer {
+    display: block !important;
+  }
+ 
+  .drawer.drawer-on {
+    transform: none !important;
+    box-shadow: var(--bs-drawer-box-shadow);
+    transition: transform 0.3s ease-in-out !important;
+  }
+ 
+  .drawer.drawer-start {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  .drawer {
+    display: flex !important;
+    /* transform: none !important; */
+    overflow: auto;
+    z-index: 110;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background-color: #ffffff;
+    transition: transform 0.3s ease-in-out !important;
+  }
+}
