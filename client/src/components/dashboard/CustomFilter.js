@@ -445,7 +445,7 @@ const CustomFilter = (props) => {
             console.log(formattedStartDate);
             console.log(formattedEndDate);
             if (formattedStartDate > formattedEndDate) {
-                toast("Invalid Start Date", {
+                toast("start date is greater than the end date.", {
                     position: "top-right",
                     type: "error",
                 });
@@ -687,14 +687,14 @@ const CustomFilter = (props) => {
         
     </div>
 </div>
-
+<ToastContainer />
 
 
             {CustomDate === "Custom" && (
     <div className="card-custom-border card flex-d-row align-items-start py-2 px-3 mt-3" id="custom-search-bar1">
         <div className="col-12 flex-d-row align-items-center gap-3">
             {/* Start Date */}
-            <div className="col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2">
+            <div className="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2 dashboard-filter">
                 <label className="fw-small text-dark fs-6 col-sm-3 col-md-4 col-lg-4 col-xl-4 labelright">Start Date:</label>
                 <DatePicker
                     selected={isCurrentZoneBehindUTC(startDate)}
@@ -707,7 +707,7 @@ const CustomFilter = (props) => {
             </div>
             
             {/* End Date */}
-            <div className="col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2">
+            <div className="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 d-flex align-items-center gap-2 dashboard-filter">
                 <label className="fw-small text-dark fs-6 col-sm-3 col-md-4 col-lg-4 col-xl-4 labelright">End Date:</label>
                 <DatePicker
                     selected={isCurrentZoneBehindUTC(endDate)}
@@ -719,7 +719,7 @@ const CustomFilter = (props) => {
             </div>
             
             {/* Search Button */}
-            <div className="col-sm-12 col-md-2 col-lg-3 col-xl-3 d-flex align-items-center">
+            <div className="col-12 col-sm-12 col-md-2 col-lg-3 col-xl-3 d-flex align-items-center dashboard-filter">
                 <button href="#" className="btn btn-primary btn-sm " onClick={() => getTimeRange("Custom", 0)}>
                     <i className="ki-outline ki-magnifier fs-8"></i>
                     Search
@@ -727,6 +727,7 @@ const CustomFilter = (props) => {
             </div>
         </div>
     </div>
+   
 )}
 
 
