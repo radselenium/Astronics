@@ -217,7 +217,7 @@ const MessageTracing = () => {
       };
 
     const [first, setFirst] = useState(1); // To manage current page
-    const rows = 5; // Number of rows per page
+    const rows = 10; // Number of rows per page
 
 
 
@@ -658,8 +658,8 @@ const MessageTracing = () => {
                                         globalFilter={globalFilter}
                                         className="custom-datatable"
                                         paginator
-                                        rows={5}
-                                        rowsPerPageOptions={[5, 10, 25, 50]}
+                                        rows={10}
+                                        rowsPerPageOptions={[10, 25, 50, 100]}
                                        
                                         onRowClick={(event) => onRowClick(event)}
                                         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
