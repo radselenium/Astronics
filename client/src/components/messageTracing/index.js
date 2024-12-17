@@ -16,7 +16,6 @@ import moment from 'moment';
 import { Button } from 'primereact/button';
 import { format, subMonths, parse, isValid } from 'date-fns';
 import HttpClient from '../config/HttpConfig';
-import PO_Creation_Sample from '../../xmldata/PO_Creation_Sample.xml';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from "react-router-dom";
@@ -88,9 +87,7 @@ const MessageTracing = () => {
 
 
     const handleButtonDownloadClick = (rowData) => {
-        console.log(rowData);
-        console.log(rowData.url);
-        console.log(rowData.status);
+        
         if(rowData.status=='Archived'){
             
         }
@@ -98,13 +95,10 @@ const MessageTracing = () => {
     };
     
 
-    const toggleFilterType = () => {
-        setIsAdvanced(!isAdvanced);
-        setFilterRows([{ key: 0, value: '' }]);
-    };
+   
 
     const dateBodyTemplateStatus=(status)=>{
-        console.log(status);
+        
         return status.replace('_', ' ')
                  .replace(/\b\w/g, char => char.toUpperCase()); // Capitalizes each word
     }
@@ -119,11 +113,11 @@ const MessageTracing = () => {
         // return statusFormats[value.toLowerCase()] || value;
      
         const trimmedValue = value.trim().toLowerCase();
-        console.log(trimmedValue);
+        
         // Look for a close match based on the beginning of the input
         for (const [key, dbValue] of Object.entries(statusFormats)) {
           if (key.startsWith(trimmedValue)) {
-            console.log(dbValue);
+           // console.log(dbValue);
             return dbValue;
           }
         }
@@ -165,53 +159,35 @@ const MessageTracing = () => {
     };
 
     const handleEndDateChange = (e) => {
-      //  e.setUTCHours(23, 59, 59, 999);
         setEndDate(e.target.value);
-        console.log(endDate);
+       // console.log(endDate);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        var getStartDate = format_Date(startDate, 0);
-        //console.log(getStartDate);
-        var getEndDate = format_Date(endDate, 1);
-
-        const newFormData = {
-            startDate: getStartDate,
-            endDate: getEndDate,
-            messageType,
-            documentId,
-        };
-
-
-        console.log('Form submitted:', newFormData);
-
-        getAllMessageData(newFormData)
-    };
+    
    
 
 
     const format_Date = (date, addDate) => {
         const d2 = date;
-        console.log(d2.toISOString());
+       // console.log(d2.toISOString());
         if (addDate) {
         
           d2.setUTCHours(23, 59, 59, 999);
-          console.log(d2.toISOString());
+         // console.log(d2.toISOString());
          
-          console.log("End Date Condition");
-          console.log("Before adding one day" + d2.toISOString());
+          
+       
          
           const EndDate = d2.toISOString();
           d2.setDate(d2.getDate() - 1);
-          console.log(d2.toISOString());
+        
           setEndDate(new Date(d2));
           return EndDate;
         }
         d2.setUTCHours(0, 0, 0, 0);
        
      
-        console.log(d2.toISOString());
+       // console.log(d2.toISOString());
         setStartDate(new Date(d2));
         return d2.toISOString();
       };
@@ -228,23 +204,13 @@ const MessageTracing = () => {
         // Check if the clicked column is 'messageID'
         if (clickedColumn === 0) {
             // Open the dialog box
-            //  handleLinkClick(rowData);
-            setSelectedRowData(rowData);
-            // setPopupVisible(true);
+            setSelectedRowData(rowData); 
         }
-        // Add oth
+        
     }
-    const handleLinkClick = (rowData) => {
+  
 
-
-
-        setSelectedRowData(rowData);
-        setPopupVisible(true);
-    };
-
-    const hidePopup = () => {
-        setPopupVisible(false);
-    };
+   
     
 
     const Reset = (e) => {
@@ -262,42 +228,27 @@ const MessageTracing = () => {
         };
         getAllMessageData(newFormData);
        setShowDataTable(false);
-       console.log(showDataTable);
+       
     };
     
 
 
-    const addFilterRow = () => {
-        setFilterRows([...filterRows, { key: Date.now(), value: '' }]);
-    };
-
-    const removeFilterRow = (key) => {
-        setFilterRows(filterRows.filter((row) => row.key !== key));
-    };
-
-    const handleChange = (key, value) => {
-        setFilterRows(
-            filterRows.map((row) => (row.key === key ? { ...row, value } : row))
-        );
-    };
+   
 
 
     const getMessageTracingData = () => {
 
         const isDirect = state?.isDirect ?? false;
-        console.log(isDirect);
+       // console.log(isDirect);
         if (isDirect) {
           // Setting the DatePicker in message Tracing
           setStartDate(state.startDate);
           const EndDate = new Date(state.endDate);
           EndDate.setUTCHours(23, 59, 59, 999);
           EndDate.setDate(EndDate.getDate() - 1);
-          console.log(EndDate.toISOString());
-          //   EndDate.setDate(EndDate.getDate() - 1);
+        
           setEndDate(EndDate);
-          console.log("Logging ", startDate);
-          console.log(endDate);
-          console.log("Initial render for dashboard");
+         
           let newFormData = {
             startDate: state.startDate,
             endDate: state.endDate,
@@ -312,16 +263,15 @@ const MessageTracing = () => {
             newFormData.productType = state.productType;
           }
     
-          console.log(newFormData);
+          
     
           getAllMessageData(newFormData);
-          console.log(startDate);
-          console.log(endDate);
+         
           return;
         }
 
         var getStartDate = format_Date(startDate, 0);
-        //console.log(getStartDate);
+        
         var getEndDate = format_Date(endDate, 1);
 
         const newFormData = {
@@ -335,15 +285,13 @@ const MessageTracing = () => {
     }
 
     const getAllMessageData = (newFormData) => {
-        // HttpClient.get('/api/getAllMessageTracing',{
-        //    params: newFormData}
-        // )
+        
         HttpClient.get('/api/getAllMessageTracing/messageTracingWithQuery',{
             params: newFormData
           }
          )
             .then(function (response) {
-                console.log(response);
+               
                 var result = response.data;
                
                 setmessagesummary(result);
@@ -354,20 +302,14 @@ const MessageTracing = () => {
             });
     }
     const dateBodyTemplate = (data) => {
-        console.log(data);
+        
         if (!data) return ""; // Return empty string if data is null or undefined
         return moment(data).format("DD-MMM-YYYY HH:mm:ss");
     }
 
     
 
-    const formatRowDate = (value) => {
-        return value.toLocaleDateString('en-US', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
-    }
+    
     useEffect(() => {
         getMessageTracingData();
         
@@ -386,43 +328,31 @@ const MessageTracing = () => {
 
     const initialColumns = [
        
-        // { field: '', header: '', sortable: true, disabled: true,  body: (rowData) => (
-        //     <a href="#" onClick={() => handleButtonClick1(rowData)} style={{ color: '#065590' }}>
-        //         <b></b>
-        //     </a>
-        // ),},
-
-        // {
-        //     field: 'xmlMessageName', header: 'XML Message Name', sortable: true, disabled: true, body: (rowData) => (
-        //         <a  download="download.xml" href={PO_Creation_Sample} target="_self" style={{ color: '#065590' }}>
-        //             <b>{rowData.xmlMessageName}</b>
-        //         </a>
-        //     ),
-        // },
+       
         {
-            field: 'productType', header: 'Product Type', sortable: true, disabled: true, tooltip: 'This is the Product Type column',
+            field: 'productType', header: 'Product Type', sortable: true, disabled: true, tooltip: 'Type of the Product',
         },
         {
-            field: 'xmlMessageName', header: 'Document Name', sortable: true, disabled: true, tooltip: 'This is the Document Name column',
+            field: 'xmlMessageName', header: 'Document Name', sortable: true, disabled: true, tooltip: 'Document Name with Appended Date',
         },
-        { field: 'documentID', header: 'Document ID', sortable: true, disabled: false, tooltip: 'This is the Document ID column',
+        { field: 'documentID', header: 'Document ID', sortable: true, disabled: false, tooltip: 'Name of the Document ID',
         },
 
-        { field: 'xmlMessageSource', header: 'XML Message Source', sortable: true, disabled: true,tooltip: 'This is the XML Message Source column' },
-        { field: 'messageType', header: 'Message Type', sortable: true, disabled: true ,tooltip: 'This is the Message Type column'},
-        { field: 'messageDirection', header: 'Message Direction', sortable: true, disabled: true ,tooltip: 'This is the Message Direction column'},
-        { field: 'receivedDate', header: 'Received Date', sortable: true, disabled: true , body: (rowData) => dateBodyTemplate(rowData.receivedDate) ,tooltip:  'The document received in the portal'},
-        { field: 'status', header: 'Status', sortable: true, disabled: true, body: (rowData) => dateBodyTemplateStatus(rowData.status),tooltip: 'This is the Status column'},
+        { field: 'xmlMessageSource', header: 'XML Message Source', sortable: true, disabled: true,tooltip: 'Source of the Request' },
+        { field: 'messageType', header: 'Message Type', sortable: true, disabled: true ,tooltip: 'Type of the Message'},
+        { field: 'messageDirection', header: 'Message Direction', sortable: true, disabled: true ,tooltip: 'Direction of Request Message'},
+        { field: 'receivedDate', header: 'Received Date', sortable: true, disabled: true , body: (rowData) => dateBodyTemplate(rowData.receivedDate) ,tooltip:  'Request Received Date'},
+        { field: 'status', header: 'Status', sortable: true, disabled: true, body: (rowData) => dateBodyTemplateStatus(rowData.status),tooltip: 'Status of the Message'},
         
-        // { field: 'documentID', header: 'Document ID', sortable: true, disabled: true },
-         { field: 'processedDate', header: 'Processed Date', sortable: true, disabled: false,  body: (rowData) => dateBodyTemplate(rowData.processedDate) },
-       // { field: 'errorInfo', header: 'Error Info', sortable: true, disabled: false },
+        
+         { field: 'processedDate', header: 'Processed Date', sortable: true, disabled: false,  body: (rowData) => dateBodyTemplate(rowData.processedDate) ,tooltip:  'Request Processed Date'},
+       
        {
         field: '',
         header: 'Download',
-        sortable: true,
+        sortable: false,
         disabled: true,
-        tooltip: 'This is the Download column',
+       // tooltip: 'This is the Download column',
         body: (rowData) => (
             <a 
                 href={rowData.url ? rowData.url : undefined} 
@@ -444,15 +374,7 @@ const MessageTracing = () => {
             </a> 
         ),
     },
-        // { field: '', header: 'Download', sortable: true, disabled: true, tooltip: 'This is the Download column',body: (rowData) => (
-        //         <a href={rowData.url} target="_blank" onClick={() => handleButtonDownloadClick(rowData)} style={{ color: '#065590' }}>
-        //              <i class="fa fa-download pe-1 " style={{ color: " rgb(6, 85, 144)" }}>
-        //              </i> 
-                  
-        //         </a>
-        //         ),
-        //     },
-            // { field: 'processedDate', header: 'processed Date(GMT)', sortable: true, disabled: true, tooltip: 'This is the Status column'},
+       
 
     ];
 
@@ -477,10 +399,7 @@ const MessageTracing = () => {
         setShowModal(false);
     };
 
-    // const onModalButtonSubmit = (selectedColumns) => {
-    //     setVisibleColumns(selectedColumns);
-    //     setShowModal(false);
-    // };
+    
     const [selectedColumns, setSelectedColumns] = useState(initialState);
 
     const handleCheckboxChange = (column) => {
@@ -505,24 +424,7 @@ const MessageTracing = () => {
 
 
     
-    const formatDate = (rowData) => {
-        const receivedDate = rowData.receivedDate;
-        if (receivedDate) {
-            const formattedDate = moment(receivedDate).format('DD-MMM-YYYY HH:mm:ss');
-            return <span>{formattedDate}</span>;
-        } else {
-            return <span>No date available</span>; // or any other message or representation for an empty date
-        }
-    };
-    const formatprocessedDate = (rowData) => {
-        const processedDate = rowData.processedDate;
-        if (processedDate) {
-            const processedDate = moment(rowData.processedDate).format('DD-MMM-YYYY HH:mm:ss');
-            return <span>{processedDate}</span>;
-        } else {
-            return <span></span>; // or any other message or representation for an empty date
-        }
-    };
+    
 
    
 
@@ -692,7 +594,7 @@ const MessageTracing = () => {
 
                                     </DataTable>
 
-                                    {/* <p>Current Page {first} of {rows}. Total {messagesummary ? messagesummary.length : 0}records </p> */}
+                                  
                                 </div>
 
 
