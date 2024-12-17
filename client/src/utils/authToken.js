@@ -21,8 +21,8 @@ export const getToken = async (scopes = ['User.Read']) => {
     // Decode the token and check expiration
     const { exp } = jwtDecode(response.accessToken);
     const currentTime = Math.floor(Date.now() / 1000);
-    console.log("Token expiration (exp):", exp);
-    console.log("Current time (currentTime):", currentTime);
+   // console.log("Token expiration (exp):", exp);
+   // console.log("Current time (currentTime):", currentTime);
     if (exp < currentTime) {
       msalInstance.loginRedirect({ scopes });
       throw new Error('Token expired');
