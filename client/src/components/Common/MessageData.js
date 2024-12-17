@@ -17,22 +17,7 @@ export const MessageTypes=[
 
 ]
 
-// export const MessageTypes=[
-//     {key:"1",value:"POCREATION",name:"PO Creation"},
-//     {key:"2",value:"POACK",name:"PO Acknowledged"},
-//     {key:"3",value:"BUYERPOCHANGE",name:"Buyer PO Change"},
-//     {key:"4",value:"BUYERPOCHANGEACK",name:"Buyer PO Change Acknowledged"},
-//     {key:"5",value:"SELLERPOCHANGE",name:"Seller PO Change"},
-//     {key:"6",value:"SELLERPOCHANGEACK",name:"Seller PO Change Acknowledged"},
-//     {key:"7",value:"SELLERSHIPMENT",name:"Seller Shipment"},
-//     {key:"8",value:"SELLERINVOICE",name:"Seller Invoice"},
-//     {key:"9",value:"SELLERINVOICEACK",name:"Seller Invoice Acknowledged"},
-//     {key:"10",value:"SELLERINVOICEEXCEPTION",name:"Seller Invoice Exception"},
-//     {key:"11",value:"QUOTEREQ",name:"Quote Request"},
-//     {key:"12",value:"QUOTERESINTERIM",name:"Quote Response Interim"},
-//     {key:"13",value:"QUOTERESFINAL",name:"Quote Response Final"}
 
-// ]
 
 export const OptionalFields=[
     {key:"1",value:"xmlMessageSource",name:"Message Source"},

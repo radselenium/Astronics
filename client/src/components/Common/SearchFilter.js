@@ -24,11 +24,9 @@ const SearchFilter = (props) => {
     const [isSavedSelected, setIsSavedSelected] = useState(false);
     const [isEditable, setIsEditable] = useState(false)
     const [HandleChange, setHandleChange] = useState(false);
-    console.log(new Date(props.endDate))
-    console.log(new Date(props.startDate))
-    console.log(props.setShowDataTable)
+    
     const [formData, setFormData] = useState({});
-    //const [messagesummary, setmessagesummary] = useState([]);
+
     const toggleFilterType = () => {
         setIsAdvanced(!isAdvanced);
         setFilterRows([{ key: 0, value: '' }]);
@@ -46,10 +44,7 @@ const SearchFilter = (props) => {
         dt.current.filter(e.target.value, 'global', 'contains');
     };
 
-    // const [startDate, setStartDate] = useState(getFormattedDate(new Date(),0));
-    // const [endDate, setEndDate] = useState(getFormattedDate(new Date(),1));
-    // const [startDate, setStartDate] = useState(subMonths(new Date(), 3));
-    // const [endDate, setEndDate] = useState(new Date());
+   
     const [startDate, setStartDate] = useState(props.startDate);
     const [endDate, setEndDate] = useState(props.endDate);
     const [messageType, setMessageType] = useState('All');
@@ -60,11 +55,11 @@ const SearchFilter = (props) => {
     };
 
     const handleEndDateChange = (date) => {
-        console.log(date);
+       
         setHandleChange(true);
-        // date.setUTCHours(23, 59, 59, 999);
+      
         setEndDate(date);
-        console.log(endDate);
+        
     };
 
     const CustomDatePickerInput = ({ value, onClick }) => (
@@ -98,26 +93,9 @@ const SearchFilter = (props) => {
     };
 
 
-
-
-    // const onRowClick = (rowData) => {
-    //     setSelectedRowData(rowData);
-    //     setPopupVisible(true);
-    // };
-    // const hidePopup = () => {
-    //     setPopupVisible(false);
-    // };
-    const handleSearch = () => {
-        // Handle the search action with the selected dates
-        // You can use the startDate and endDate values here
-    };
-
-
-
-
     const isCurrentZoneBehindUTC = (date) => {
         // Get the time string with the UTC offset in the specified time zone
-        console.log(date);
+       // console.log(date);
         let offsetMinutes = new Date().getTimezoneOffset();
         if (offsetMinutes > 0) {
             const LocalDateTime = new Date(date);
@@ -132,18 +110,16 @@ const SearchFilter = (props) => {
     const Reset = (e) => {
         e.preventDefault();
         setStartDate(subMonths(new Date(), 1));
-        // setEndDate((new Date()));
+        
         const EndDate = new Date();
         EndDate.setUTCHours(23, 59, 59, 999);
         const QueryEndDate = EndDate;
         EndDate.setDate(EndDate.getDate() - 1)
         setEndDate(EndDate);
-        //  setStartDate((prevStartDate) => (subMonths(new Date(), 3)));
-        //setEndDate((prevEndDate) => new Date());
+       
         setMessageType('All');
         setDocumentId('');
-        console.log(startDate);
-        console.log(endDate);
+       
 
         const newFormData = {
             startDate: subMonths(startDate, 3),
@@ -151,12 +127,10 @@ const SearchFilter = (props) => {
             messageType: 'All',
 
         };
-        console.log("test");
-        //console.log('hi')
+       
         props.getAllMessageData(newFormData)
         setShowDataTable(false);
-        console.log(showDataTable)
-        //getRecordBySearchValue(newFormData);
+       
     };
 
 
@@ -180,13 +154,7 @@ const SearchFilter = (props) => {
 
 
 
-    const addFilterRow = () => {
-        setFilterRows([...filterRows, { key: Date.now(), value: '' }]);
-    };
-
-    const removeFilterRow = (key) => {
-        setFilterRows(filterRows.filter((row) => row.key !== key));
-    };
+   
 
     const handleChange = (key, value) => {
         setFilterRows(
@@ -202,11 +170,9 @@ const SearchFilter = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         var getStartDate = formatDate(startDate, 0);
-        console.log(getStartDate);
+       // console.log(getStartDate);
         var getEndDate = formatDate(endDate, 1);
-        // getEndDate= new Date (getEndDate.setUTCHours(23, 59, 59, 999));
-        console.log(getEndDate);
-        //var getDocumentId = documentId??documentId;
+        
 
         if (getStartDate > getEndDate) {
             toast("Received Date From cannot be greater than Received Date To.", {
@@ -222,49 +188,12 @@ const SearchFilter = (props) => {
             messageType,
             documentId,
         };
-        console.log(newFormData);
+       
         // Update formData state
         props.getAllMessageData(newFormData)
-        //getRecordBySearchValue(newFormData);
+        
     };
 
-    //     const formatDate = (date, addDate) => {
-
-    //         var d = new Date(date),
-    //             month = '' + (d.getMonth() + 1),
-    //             day = '' + (date.getDate() + addDate),
-    //             year = d.getFullYear();
-    //         var d2 = new Date(year + "-" + month + "-" + day)
-    //         console.log(d2)
-    //         if(addDate==0){
-
-    // return d2
-    //         }
-    //         else if(addDate==1)
-    //         {
-
-    //         return d2
-    //         }
-    //     }
-
-
-    // const formatDate = (date, addDate) => {
-
-    //     var d = new Date(date),
-    //         month = '' + (d.getMonth() + 1),
-    //         day = '' + (date.getDate() + addDate),
-    //         year = d.getFullYear();
-    //     var d2 = new Date(year + "-" + month + "-" + day)
-    //     console.log(d2)
-    //     d2.setDate(d2.getDate()+1);
-    //     d2.setUTCHours(0, 0, 0, 0)
-    //     if(addDate){
-    //         d2.setTime(d2.getTime() - 1);
-    //     }
-    //     console.log(d2.toISOString());
-    //     return d2.toISOString();
-
-    // }
 
 
     const formatDate = (date, addDate) => {
@@ -272,28 +201,28 @@ const SearchFilter = (props) => {
         const d2 = date;
         if (addDate) {
 
-            console.log(d2);
+           
             const offminutes = new Date().getTimezoneOffset(); // for utc negative regions
             if (offminutes > 0 && HandleChange) {
                 d2.setDate(d2.getDate() - 1);       // for utc negative regions
                 setHandleChange(false);
             }
             d2.setUTCHours(23, 59, 59, 999);
-            console.log("After ISOString" + d2.toISOString());
+          //  console.log("After ISOString" + d2.toISOString());
 
-            console.log("End Date Condition");
+           
             d2.setDate(d2.getDate() + 1);
-            console.log("Before adding Date" + d2.toISOString());
+          //  console.log("Before adding Date" + d2.toISOString());
             const endDate = d2.toISOString();
             d2.setDate(d2.getDate() - 1);
-            console.log("After subtract Date" + d2.toISOString());
+          //  console.log("After subtract Date" + d2.toISOString());
 
             return endDate;
         }
         d2.setUTCHours(0, 0, 0, 0);
 
 
-        console.log(d2.toISOString());
+       // console.log(d2.toISOString());
         return d2.toISOString();
     };
 
@@ -377,25 +306,13 @@ const SearchFilter = (props) => {
                                                 {MessageTypes.map((e, key) => {
                                                     return <option key={key} value={e.value}>{e.name}</option>;
                                                 })}
-                                                {/* <option value="1">PO Creation</option>
-                                    <option value="2">PO Ack</option>
-                                    <option value="1">PO Shipment</option>
-                                    <option value="2">PO Invoice</option> */}
+                                               
 
                                             </select>
 
                                         </div>
                                     </div>
-                                    {/* <div class="col-md-4 col-lg-4 col-xl-4 mb-md-5  flex-d-row align-items-baseline"  >
-                                        <div class="px-2 col-md-6 d-flex justify-content-end">
-                                            <span class="fw-small text-dark fs-6" >Document ID</span>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" name="documentId" value={documentId}
-                                                onChange={(e) => setDocumentId(e.target.value)} class="form-control" style={{ padding: "2px 2px",  }} />
-                                        </div>
-
-                                    </div> */}
+                                    
 
 
                                 </div>
