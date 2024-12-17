@@ -111,7 +111,7 @@ function MainApp() {
   const fetchUserDetails = async () => {
     // Check if an active account is set
     const activeAccount = instance.getActiveAccount();
-    console.log(activeAccount);
+   // console.log(activeAccount);
     if (activeAccount) {
       const request = {
         scopes: ["User.Read"],
@@ -120,7 +120,7 @@ function MainApp() {
 
       try {
         const accessToken = await getToken(); // Automatically handles token expiration and redirection
-        console.log(accessToken);
+       
         // Exit if no token is available
         if (!accessToken){
           navigate("/");
@@ -133,7 +133,7 @@ function MainApp() {
       },
     });
 
-    console.log("User details fetched:", response.data);
+   // console.log("User details fetched:", response.data);
     setUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
@@ -156,7 +156,6 @@ function MainApp() {
     
       <Routes>
       <Route path="/" element={<Navigate to="/dashboard" />} />
-        {/* <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/messageTracing" element={<ProtectedRoute><MessageTracing /></ProtectedRoute>} />
       </Routes>
