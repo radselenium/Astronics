@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 
 const MessagePerType = (props) => {
     const [data, setData] = useState(props.dataForMessagePerType);
-    console.log(props)
+  //  console.log(props)
 	const chartRef = useRef();
 
 	const downloadChart = () => {
@@ -25,9 +25,10 @@ const MessagePerType = (props) => {
 		<span title='Download Chart' className="fas fa-download" onClick={downloadChart} style={{ cursor: 'pointer',position:'absolute',top:'33px',right:'18px',color:'rgb(6, 85, 144)' }}></span>
         <div ref={chartRef} className="text-center mx-auto">
              <ResponsiveContainer width="100%" height={300}>
-				<BarChart width={300} height={300} data={props.dataForMessagePerType} barSize={60 / props.dataForMessagePerType.length}>
+				<BarChart width={400} height={300} data={props.dataForMessagePerType} barSize={60 / props.dataForMessagePerType.length}>
 					<CartesianGrid strokeDasharray="3 3" />
-					<XAxis dataKey="messageType">
+					<XAxis dataKey="messageType"  tick={{ fontSize: 12, width: 60, wordWrap: 'break-word' }}  
+   >
 
 					</XAxis>
 					<YAxis dataKey="count" />

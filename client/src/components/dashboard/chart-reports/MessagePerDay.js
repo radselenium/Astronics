@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 
 const MessagePerDay = (props) => {
   const [messagesPerDay, setmessagesperDay] = useState(props.dataForMessagePerDay);
-  console.log(messagesPerDay)
+ // console.log(messagesPerDay)
   const chartRef = useRef();
 
   const downloadChart = () => {
