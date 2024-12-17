@@ -1,15 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import MessagingReport from './MessagingReport'
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import SearchFilter from '../Common/SearchFilter';
-import axios from 'axios';
-import HttpClient from '../config/HttpConfig';
 import { Link } from "react-router-dom";
 
 function MessageSummary(props) {
-    console.log(props)
-    console.log(props.sourceselectValue)
+   // console.log(props)
+    //console.log(props.sourceselectValue)
     const [isAdvanced, setIsAdvanced] = useState(false);
     const [filterRows, setFilterRows] = useState([{ key: 0, value: '' }]);
     //const [showSave, setshowSave] = useState(true);
@@ -36,23 +31,14 @@ function MessageSummary(props) {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-    // const onRowClick = (rowData) => {
-    //     setSelectedRowData(rowData);
-    //     setPopupVisible(true);
-    // };
-    // const hidePopup = () => {
-    //     setPopupVisible(false);
-    // };
-    const handleSearch = () => {
-        // Handle the search action with the selected dates
-        // You can use the startDate and endDate values here
-    };
+    
+   
     const Reset = () => {
         setStartDate(getFormattedDate(new Date()));
         setEndDate(getFormattedDate(new Date()));
         setMessageType('All');
         setDocumentId('');
-        console.log('hi')
+      //  console.log('hi')
         //messageType="";
     };
     // Function to format a date as "YYYY-MM-DD"
@@ -61,50 +47,79 @@ function MessageSummary(props) {
         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
-        // return `${day}/${month}/${year}`;
+       
     }
 
 
-    const addFilterRow = () => {
-        setFilterRows([...filterRows, { key: Date.now(), value: '' }]);
-    };
-
-    const removeFilterRow = (key) => {
-        setFilterRows(filterRows.filter((row) => row.key !== key));
-    };
-
-    const handleChange = (key, value) => {
-        setFilterRows(
-            filterRows.map((row) => (row.key === key ? { ...row, value } : row))
-        );
-    };
+   
 
 
     const MultiStatusFilter = (SourceselectValue, dateOption) => {
         let statuses = [];
         if (SourceselectValue === "All") {
-            if (dateOption === "Today") {
-                statuses = ["Dispatched", "Picked_up"];
+            if (dateOption === "Custom") {
+                statuses = ["Dispatched", "Picked_up","Deleted"];
                 return statuses;
             }
-            statuses = ["Dispatched", "Picked_up", "Archived"];
+            statuses = ["Dispatched", "Picked_up"];
         } else if (SourceselectValue === "ASTRONICS") {
-            if (dateOption === "Today") {
-                statuses = ["Dispatched"];
+            if (dateOption === "Custom") {
+                statuses = ["Dispatched","Deleted"];
                 return statuses;
             }
-            statuses = ["Dispatched", "Archived"];
+            statuses = ["Dispatched"];
         } else {
-            if (dateOption === "Today") {
-                statuses = ["Picked_up"];
+            if (dateOption === "Custom") {
+                statuses = ["Picked_up","Deleted"];
                 return statuses;
             }
-            statuses = ["Picked_up", "Archived"];
+            statuses = ["Picked_up"];
         }
         return statuses;
     };
 
     var statuses = MultiStatusFilter(props.sourceselectValue, props.DateOption);
+
+
+
+    const calculateMessageCount = () => {
+        let messageCount = 0;
+
+        if (props.sourceselectValue === "All") {
+            if (props.DateOption === "Custom") {
+                messageCount = 
+                    Number(props.messages.processedMessages || 0) +
+                    Number(props.messages.dispatchedMessages || 0) +
+                    Number(props.messages.deletedMessages || 0);
+                    console.log(messageCount);
+            } else {
+                messageCount = 
+                    Number(props.messages.processedMessages || 0) +
+                    Number(props.messages.dispatchedMessages || 0);
+            }
+        } else if (props.sourceselectValue === "ASTRONICS") {
+            if (props.DateOption === "Custom") {
+                messageCount = 
+                    Number(props.messages.dispatchedMessages || 0) +
+                    Number(props.messages.deletedMessages || 0);
+            } else {
+                messageCount = 
+                    Number(props.messages.dispatchedMessages || 0);
+            }
+        } else {
+            if (props.DateOption === "Custom") {
+                messageCount = 
+                    Number(props.messages.processedMessages || 0) +
+                    Number(props.messages.deletedMessages || 0);
+            } else {
+                messageCount = 
+                    Number(props.messages.processedMessages || 0);
+            }
+        }
+
+        return messageCount;
+    };
+    
 
 
     return (
@@ -116,42 +131,7 @@ function MessageSummary(props) {
 
             <div>&nbsp;</div>
 
-            {/*begin::Row*/}
-            {/* <div class="row g-5 g-xl-10">
-
-                               
-                                <div class="col-xl-12 mb-5 mb-xl-2" style={{ marginTop: "5px" }}>
-                                    
-                                    <div class="card card-flush h-xl-100" style={{ borderBottom: "0px", border: "0px" }}>
-                                      
-                                        <div class="card-header" style={{ paddingLeft: "0px", border: "0px" }}>
-
-                                           
-                                            <div class="card-toolbar">
-                                               
-                                                <ul class="nav">
-                                                    <li class="nav-item">
-                                                        <a class="nav-link btn btn-text-custom btn-md btn-color-muted btn-active btn-active-light fw-bold px-4 me-2 py-2 active border" data-kt-timeline-widget-1="tab" data-bs-toggle="tab" href="#kt_timeline_widget_1_tab_day">Current Week</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link btn btn-text-custom btn-md btn-color-muted btn-active btn-active-light fw-bold px-4 me-2 py-2 border" data-kt-timeline-widget-1="tab" data-bs-toggle="tab" href="#kt_timeline_widget_1_tab_week">Last Month</a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link btn btn-text-custom btn-md btn-color-muted btn-active btn-active-light fw-bold px-4 me-2 py-2 border" data-kt-timeline-widget-1="tab" data-bs-toggle="tab" href="#kt_timeline_widget_1_tab_month">Last Year</a>
-                                                    </li>
-                                                </ul>
-                                             
-                                            </div>
-                                        
-                                        </div>
-                                   
-
-                                    </div>
-                                  
-                                </div>
-                                
-                            </div> */}
-            {/*end::Row*/}
+           
 
             {/*begin::Row*/}
             <div class="row g-5 g-xl-10 mb-xl-5 md-mb-5" id='messge-report-card'>
@@ -213,44 +193,7 @@ function MessageSummary(props) {
                 </div>
                 {/*end::Col*/}
 
-                {/*begin::Col*/}
-                {/* <div class="col-md-4 col-lg-4 col-xl-4 col-xxl-4 col-sm-6 mb-md-5 mb-xl-5 message-count-card ">
-
-                                
-                                <div class=" card card-flush  mb-xl-1 shadow-sm p-1 mb-1" id='message-card-2'>
-                                   
-                                    <div class="card-header pt-5 justify-content-center">
-                                       
-                                        <div class="card-title d-flex flex-column ">
-                                         
-                                            <div class="d-flex align-items-center mb-md-5 ">
-                                              
-                                                <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Received Messages</span>
-                                               
-
-                                            </div>
-                                            <div class="align-self-center">
-                                             
-                                                <span class="fs-2hx fw-bold text-info me-2 lh-1 ls-n2">{props.messages.recievedMessages}</span>
-                                              
-
-                                            </div>
-                                         
-
-                                        </div>
-                                       
-                                    </div>
-                                    
-                                    <div class="card-body d-flex align-items-end pt-0">
-
-                                    </div>
-                                   
-                                </div>
-                                
-
-
-                            </div> */}
-                {/*end::Col*/}
+              
                 {/*begin::Col*/}
                 <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card">
 
@@ -283,17 +226,18 @@ function MessageSummary(props) {
                                         }}
                                     >
                                         <span className="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">
-                                            {
+                                            {/* {
                                                 props.sourceselectValue === "All"
                                                     ? Number(props.messages.processedMessages || 0) +
                                                     Number(props.messages.dispatchedMessages || 0) +
-                                                    Number(props.messages.archivedMessages || 0)
+                                                    Number(props.messages.deletedMessages || 0)
                                                     : props.sourceselectValue === "ASTRONICS"
                                                         ? Number(props.messages.dispatchedMessages || 0) +
-                                                        Number(props.messages.archivedMessages || 0)
+                                                        Number(props.messages.deletedMessages || 0)
                                                         : Number(props.messages.processedMessages || 0) +
-                                                        Number(props.messages.archivedMessages || 0)
-                                            }
+                                                        Number(props.messages.deletedMessages || 0)
+                                            } */}
+                                            {calculateMessageCount()}
                                         </span>
                                     </Link>
                                     {/*end::Amount*/}
@@ -329,8 +273,7 @@ function MessageSummary(props) {
                                 {/*begin::Info*/}
                                 <div class="d-flex align-items-center mb-md-5 my-4">
                                     {/*begin::Amount*/}
-                                    {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">In Queue</span> */}
-                                    {/* <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2">Awaiting Pickup</span> */}
+                                    
                                     <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Awaiting Processing</span>
                                     {/*end::Amount*/}
 

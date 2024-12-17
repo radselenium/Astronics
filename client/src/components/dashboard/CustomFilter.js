@@ -12,14 +12,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 
 const CustomFilter = (props) => {
-    console.log(props)
+    //console.log(props)
     const [sourceselectValue, SourcesetSelectValue] = useState("All");
     const [productselectValue, setproductSelectValue] = useState("All");
     const [CustomDate, setCustomDate] = useState("");
     const [startDate, setStartDate] = useState(subMonths(new Date(), 1));
     const [endDate, setEndDate] = useState(new Date());
-    //const [messagesperType, setmessagesPerType] = useState([]);
-    //const [messagesPerDay, setmessagesperDay] = useState([]);
     const [HandleChange, setHandleChange] = useState(false);
     const messageType = {
         incomingMessage: 0,
@@ -29,9 +27,9 @@ const CustomFilter = (props) => {
         failedProcessing: 0,
         resolvedMessages: 0,
         dispatchedMessages: 0,
-        archivedMessages: 0
+        deletedMessages: 0
     }
-    //const [messages, setMessages] = props.messages;
+    
 
     //Custom Date Filter
     const handleStartDateChange = (date) => {
@@ -46,7 +44,7 @@ const CustomFilter = (props) => {
 
     const isCurrentZoneBehindUTC = (date) => {
         // Get the time string with the UTC offset in the specified time zone
-        console.log(date);
+       // console.log(date);
         let offsetMinutes = new Date().getTimezoneOffset();
         if (offsetMinutes > 0) {
             const LocalDateTime = new Date(date);
@@ -89,8 +87,8 @@ const CustomFilter = (props) => {
 
     const SourceonChange = (event) => {
         const value = event.target.value;
-        console.log(value);
-        console.log(SourcesetSelectValue(value));
+       // console.log(value);
+       // console.log(SourcesetSelectValue(value));
         SourcesetSelectValue(value);
         SourcesetSelectValue(value);
         props.SourcesetSelectValue(value);
@@ -99,7 +97,7 @@ const CustomFilter = (props) => {
     const DateRangeonChange = (event) => {
         const value1 = event.target.value;
         setCustomDate(value1);
-        console.log(value1);
+       // console.log(value1);
         props.setDateSelectValue(value1);
 
         if (value1 == "Custom" && !InitialRender.current) {
@@ -119,18 +117,18 @@ const CustomFilter = (props) => {
         // getTimeRange(value1, 1)
     };
     const getTimeRange = (selectValue, isInitial) => {
-        console.log(sourceselectValue);
+        //console.log(sourceselectValue);
         //console.log(props.dateSelectValue);
         const ProductSource = productselectValue;
-        console.log(ProductSource);
+       // console.log(ProductSource);
         const MessageSource = sourceselectValue;
-        console.log(MessageSource);
+       // console.log(MessageSource);
         const DateRangeValue = selectValue;
         const currentDate = new Date();
-        console.log(selectValue);
+       // console.log(selectValue);
         const epochDate = new Date(0);
         // console.log(epochDate); // Pass 0 as the timestamp to represent the epoch time
-        console.log(epochDate.toISOString());
+       // console.log(epochDate.toISOString());
         var ProductTypeValue = "";
         var MessageSourceValue = "";
         var SetDateValue = "";
@@ -166,36 +164,9 @@ const CustomFilter = (props) => {
         }
 
 
-        //DateRange
-        // if (selectValue == "All") {
-        //     props.setmessagesPerDay([]);
-        //     props.setShowDayChart(false)
-        //     StartDate = new Date(0);
-        //     StartDate.setUTCHours(0, 0, 0, 0);
-        //     formattedStartDate = StartDate.toISOString();
-        //     console.log(formattedStartDate);
-
-        //     EndDate = new Date();
-        //     EndDate.setUTCHours(23, 59, 59, 999);
-        //     formattedEndDate = EndDate.toISOString();
-        //     console.log(formattedEndDate);
-
-        //     const formdata = {
-        //         formattedStartDate: formattedStartDate,
-        //         formattedEndDate: formattedEndDate,
-
-        //     }
-
-        //     if (MessageSource !== "BOTH") {
-        //         formdata.xmlMessageSource = MessageSource; // Add xmlMessageSource property
-        //     }
-
-        //     getRecords(formdata, selectValue)
-
-
-        // } 
+       
         if (selectValue === "Today") {
-            // props.setmessagesPerDay([]);
+           
             props.setShowDayChart(true);
 
             // Set start of today
@@ -208,8 +179,8 @@ const CustomFilter = (props) => {
             EndDate.setUTCHours(23, 59, 59, 999); // End of today (UTC 23:59:59)
             const formattedEndDate = EndDate.toISOString();
 
-            console.log("Start Date:", formattedStartDate);
-            console.log("End Date:", formattedEndDate);
+          //  console.log("Start Date:", formattedStartDate);
+           // console.log("End Date:", formattedEndDate);
 
             props.setStartDate(formattedStartDate);
             props.setEndDate(formattedEndDate);
@@ -217,7 +188,7 @@ const CustomFilter = (props) => {
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
-                // xmlMessageSource: MessageSource
+               
             };
 
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
@@ -237,14 +208,14 @@ const CustomFilter = (props) => {
             SetDateValue = DateRangeValue;
             StartDate = new Date();
             StartDate.setDate(StartDate.getDate() - 6);
-            console.log(StartDate);
+           // console.log(StartDate);
             StartDate.setUTCHours(0, 0, 0, 0);
             formattedStartDate = StartDate.toISOString();
-            console.log(formattedStartDate);
+           // console.log(formattedStartDate);
             EndDate = new Date();
             EndDate.setUTCHours(23, 59, 59, 999);
             formattedEndDate = EndDate.toISOString();
-            console.log(formattedEndDate);
+           // console.log(formattedEndDate);
 
             props.setStartDate(formattedStartDate);
             props.setEndDate(formattedEndDate);
@@ -252,7 +223,7 @@ const CustomFilter = (props) => {
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
-                //  xmlMessageSource: MessageSource
+                
             }
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
             if (MessageSource !== "All") {
@@ -265,7 +236,8 @@ const CustomFilter = (props) => {
 
             getRecords(formdata, selectValue)
 
-        } else if (selectValue == "CurrentWeek") {
+        } 
+        else if (selectValue == "CurrentWeek") {
             props.setShowDayChart(true)
             SetDateValue = DateRangeValue;
 
@@ -279,7 +251,7 @@ const CustomFilter = (props) => {
             StartDate.setDate(StartDate.getDate() - differenceToMonday);
             StartDate.setUTCHours(0, 0, 0, 0);
             formattedStartDate = StartDate.toISOString();
-            console.log("Start of the week (Monday):", formattedStartDate);
+            
 
             // Find the end of the current week (Sunday)
             EndDate = new Date(today);
@@ -287,7 +259,7 @@ const CustomFilter = (props) => {
             EndDate.setDate(EndDate.getDate() + differenceToSunday);
             EndDate.setUTCHours(23, 59, 59, 999);
             formattedEndDate = EndDate.toISOString();
-            console.log("End of the week (Sunday):", formattedEndDate);
+            
 
             props.setStartDate(formattedStartDate);
             props.setEndDate(formattedEndDate);
@@ -295,7 +267,7 @@ const CustomFilter = (props) => {
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
-                // xmlMessageSource: MessageSource
+                
             };
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
             if (MessageSource !== "All") {
@@ -304,7 +276,7 @@ const CustomFilter = (props) => {
             if (ProductSource !== "All") {
                 formdata.productType = ProductSource;
             }
-            console.log(formdata);
+           
 
             getRecords(formdata, selectValue);
         }
@@ -319,7 +291,7 @@ const CustomFilter = (props) => {
 
             // Find the start of the current month (1st day)
             StartDate = new Date(today.getFullYear(), today.getMonth(), 1);
-            console.log("Start of the month:", StartDate);
+            //console.log("Start of the month:", StartDate);
             // Add 5 hours and 30 minutes
             StartDate.setHours(StartDate.getHours() + 5);
             StartDate.setMinutes(StartDate.getMinutes() + 30);
@@ -333,7 +305,7 @@ const CustomFilter = (props) => {
             const EndDate = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 0)); 
             EndDate.setUTCHours(23, 59, 59, 999); // End of the day
             formattedEndDate = EndDate.toISOString();
-            console.log("End of the month:", formattedEndDate);
+            
 
             props.setStartDate(formattedStartDate);
             props.setEndDate(formattedEndDate);
@@ -341,7 +313,7 @@ const CustomFilter = (props) => {
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
-                //xmlMessageSource: MessageSource
+              
             };
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
             if (MessageSource !== "All") {
@@ -353,64 +325,6 @@ const CustomFilter = (props) => {
             console.log(formdata);
 
             getRecords(formdata, selectValue);
-        }
-
-
-
-
-
-
-        else if (selectValue == "LastMonth") {
-            props.setmessagesPerDay([]);
-            props.setShowDayChart(false)
-            SetDateValue = DateRangeValue;
-            var currentDate1 = new Date();
-            console.log(currentDate1);
-            var firstDayOfPreviousMonth = new Date(currentDate1.getFullYear(), currentDate1.getMonth() - 1, 1);
-            var lastDayOfPreviousMonth = new Date(currentDate1.getFullYear(), currentDate1.getMonth(), 0);
-
-
-            // Add 5 hours and 30 minutes
-            firstDayOfPreviousMonth.setHours(firstDayOfPreviousMonth.getHours() + 5);
-            firstDayOfPreviousMonth.setMinutes(firstDayOfPreviousMonth.getMinutes() + 30);
-            lastDayOfPreviousMonth.setHours(lastDayOfPreviousMonth.getHours() + 5);
-            lastDayOfPreviousMonth.setMinutes(lastDayOfPreviousMonth.getMinutes() + 30);
-            console.log(firstDayOfPreviousMonth);
-
-            console.log(firstDayOfPreviousMonth);
-            console.log(lastDayOfPreviousMonth);
-            // Set time to midnight (00:00:00.000) in UTC
-            firstDayOfPreviousMonth.setUTCHours(0, 0, 0, 0);
-            lastDayOfPreviousMonth.setUTCHours(23, 59, 59, 999);
-
-            // Output as ISO strings
-            const utcFirstDay = firstDayOfPreviousMonth.toISOString();
-            const utcLastDay = lastDayOfPreviousMonth.toISOString();
-            formattedStartDate = utcFirstDay;
-            formattedEndDate = utcLastDay;
-            console.log("First Day of Previous Month:", formattedStartDate);
-            console.log("Last Day of Previous Month:", formattedEndDate);
-
-            props.setStartDate(formattedStartDate);
-            props.setEndDate(formattedEndDate);
-
-            const formdata = {
-                formattedStartDate: formattedStartDate,
-                formattedEndDate: formattedEndDate,
-                // xmlMessageSource: MessageSource
-            }
-            // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
-            if (MessageSource !== "All") {
-                formdata.xmlMessageSource = MessageSource; // Add xmlMessageSource property
-            }
-            if (ProductSource !== "All") {
-                formdata.productType = ProductSource;
-            }
-            console.log(formdata);
-            getRecords(formdata, selectValue)
-
-
-
         }
 
 
@@ -435,15 +349,14 @@ const CustomFilter = (props) => {
                 formattedStartDate = StartCustomDate.toISOString();
                 formattedEndDate = EndCustomDate.toISOString();
                 EndCustomDate.setDate(EndCustomDate.getDate() - 1);
-                console.log("Not Initial");
+              //  console.log("Not Initial");
             } else {
                 formattedStartDate = StartCustomDate.toISOString();
                 formattedEndDate = EndCustomDate.toISOString();
                 EndCustomDate.setDate(EndCustomDate.getDate() - 1);
-                console.log("Initial");
+             //   console.log("Initial");
             }
-            console.log(formattedStartDate);
-            console.log(formattedEndDate);
+            
             if (formattedStartDate > formattedEndDate) {
                 toast("start date is greater than the end date.", {
                     position: "top-right",
@@ -458,7 +371,7 @@ const CustomFilter = (props) => {
             const formdata = {
                 formattedStartDate: formattedStartDate,
                 formattedEndDate: formattedEndDate,
-                // xmlMessageSource: MessageSource,
+                
             };
             // Conditionally add xmlMessageSource if MessageSource is not "BOTH"
             if (MessageSource !== "All") {
@@ -470,46 +383,7 @@ const CustomFilter = (props) => {
             getRecords(formdata, selectValue);
         }
 
-        // else if (selectValue == "Custom") {
-
-        //     const StartCustomDate = startDate;
-        //     const EndCustomDate = endDate;
-        //     StartCustomDate.setUTCHours(0, 0, 0, 0);
-        //     EndCustomDate.setUTCHours(23, 59, 59, 999);
-        //     EndCustomDate.setDate(EndCustomDate.getDate() + 1);
-        //     formattedStartDate=StartCustomDate.toISOString();
-        //     formattedEndDate= EndCustomDate.toISOString();
-        //     EndCustomDate.setDate(EndCustomDate.getDate() - 1);
-        //     console.log(formattedStartDate);
-        //     console.log(formattedEndDate);
-        //     if(formattedStartDate > formattedEndDate){
-        //         toast("Invalid Start Date",{
-        //             position:"top-right",
-        //             type:"error"
-        //         })
-        //         return;
-        //     }
-        //     const formdata = {
-        //         formattedStartDate: formattedStartDate,
-        //         formattedEndDate: formattedEndDate,
-        //         xmlMessageSource: MessageSource
-        //     }
-        //     getRecords(formdata,selectValue);
-
-
-        // }
-
-
-        // if (MessageSourceValue !== null && SetDateValue !== null) {
-
-        // }
-    }
-
-    // useEffect(() => {
-    //     getTimeRange(props.dateSelectValue, 1)
-
-    // }, [sourceselectValue]);
-
+    } 
 
     const flag = useRef(true);
     useEffect(() => {
@@ -522,10 +396,7 @@ const CustomFilter = (props) => {
     }, [sourceselectValue, productselectValue]);
 
     const getRecords = (formdata, selectValue) => {
-        // HttpClient.post(
-        //     '/api/getAllStatusCount', formdata
-
-        // )
+       
         HttpClient.get(
             '/api/getAllStatusCount/findByAggregateQuery', {
             params: formdata
@@ -533,16 +404,13 @@ const CustomFilter = (props) => {
         )
 
             .then(function (response) {
-                console.log(response.data);
+             //   console.log(response.data);
                 const firstItem = response.data || {}; // Get the first item or an empty object
                 const { statusCounts = [], overallCount = 0 } = firstItem; // Default to empty array and 0 for overallCount
 
-                console.log('Status Counts:', statusCounts);
-                console.log('Overall Count:', overallCount);
+               // console.log('Status Counts:', statusCounts);
+              //  console.log('Overall Count:', overallCount);
 
-                // const { statusCounts, overallCount } = response.data[0]?response.data[0]:[];
-                // console.log('Status Counts:', statusCounts);
-                // console.log('Overall Count:', overallCount);
 
                 messageType.incomingMessage = overallCount ? overallCount : 0;
 
@@ -564,8 +432,8 @@ const CustomFilter = (props) => {
                             case 'Dispatched':
                                 messageType.dispatchedMessages = count;
                                 break;
-                            case 'Archived':
-                                messageType.archivedMessages = count;
+                            case 'Deleted':
+                                messageType.deletedMessages = count;
                                 break;
 
                             default:
@@ -574,32 +442,14 @@ const CustomFilter = (props) => {
                         }
                     });
                 }
-                // if (Array.isArray(statusCounts)) {
-                //     statusCounts.forEach(statusCount => {
-                //         const { _id, count } = statusCount;
-                //         switch (_id.status) {
-                //             case "PROCESSED":
-                //                 messageType.processedMessages = count;
-                //                 break;
-                //             case "QUEUED":
-                //                 messageType.inQueue = count;
-                //                 break;
-                //             case "FAILED":
-                //                 messageType.failedProcessing = count;
-                //                 break;
-
-                //             default:
-                //                 break;
-                //         }
-                //     });
-                // }
+              
                 props.setMessages({ ...messageType })
             })
         HttpClient.get('/api/getMessageTypeCount/messageTypeAggregateQuery', { params: formdata }).then(function (response) {
             try {
-                //const response =  fetch('');
+                
                 const result = response.data;
-                console.log(result);
+               // console.log(result);
                 const filteredData = result.filter(entry => entry.messageType !== null);
                 props.setmessagesPerType(filteredData);
             } catch (error) {
@@ -609,8 +459,8 @@ const CustomFilter = (props) => {
         })
         if (selectValue == 'Last7Days' || 'Today') {
             HttpClient.get('/api/getAllMessagePerDayCount/findByAggregateQueryMessagePerDay', { params: formdata }).then(function (response) {
-                console.log(response)
-                console.log(response.data);
+              //  console.log(response)
+               // console.log(response.data);
                 const result = (response.data)
                 result.forEach(element => {
                     if (element._id) {

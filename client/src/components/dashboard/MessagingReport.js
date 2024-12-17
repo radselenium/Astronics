@@ -1,8 +1,6 @@
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Tooltip, Cell, ResponsiveContainer, Label } from 'recharts';
-import axios from 'axios';
-import HttpClient from '../config/HttpConfig';
 import MessagePerType from './chart-reports/MessagePerType';
 import MessagePerDay from './chart-reports/MessagePerDay';
 import { useMediaQuery } from "@mui/material";
@@ -33,7 +31,7 @@ function ChartDimension() {
 }
 
 const SimplePieChart = (props) => {
-	console.log(props);
+	
 
 	const chartRef = useRef();
 
@@ -47,31 +45,72 @@ const SimplePieChart = (props) => {
 			});
 	};
 	const pieChartData = [
-		//	{ name: 'Incoming ', value: props.messages.incomingMessage },
-		//	{ name: 'Recieved ', value: props.messages.recievedMessages != 0?props.messages.recievedMessages:'' },
-		// { name: 'Processed ', value: props.messages.processedMessages != 0?props.messages.processedMessages:'' },
-		// { name: 'In Queue', value: props.messages.inQueue != 0?props.messages.inQueue:''},
-		//{ name: 'Processed', value: props.messages.processedMessages != 0?props.messages.processedMessages:'' },
+		
+		// {
+		// 	name: 'Processed',
+		// 	value: props.sourceselectValue === "All"
+		// 		? Number(props.messages.processedMessages || 0) +
+		// 		Number(props.messages.dispatchedMessages || 0) +
+		// 		Number(props.messages.deletedMessages || 0)
+		// 		: props.sourceselectValue === "ASTRONICS"
+		// 			? Number(props.messages.dispatchedMessages || 0) +
+		// 			Number(props.messages.deletedMessages || 0)
+		// 			: Number(props.messages.processedMessages || 0) +
+		// 			Number(props.messages.deletedMessages || 0)
+		// },
 		{
 			name: 'Processed',
-			value: props.sourceselectValue === "All"
-				? Number(props.messages.processedMessages || 0) +
-				Number(props.messages.dispatchedMessages || 0) +
-				Number(props.messages.archivedMessages || 0)
-				: props.sourceselectValue === "ASTRONICS"
-					? Number(props.messages.dispatchedMessages || 0) +
-					Number(props.messages.archivedMessages || 0)
-					: Number(props.messages.processedMessages || 0) +
-					Number(props.messages.archivedMessages || 0)
+			value: (() => {
+				let processedValue = 0;
+	
+				if (props.sourceselectValue === "All") {
+					if (props.DateOption === "Custom") {
+						// Include all messages for "Custom" date option
+						processedValue =
+							Number(props.messages.processedMessages || 0) +
+							Number(props.messages.dispatchedMessages || 0) +
+							Number(props.messages.deletedMessages || 0);
+					} else {
+						// Exclude deleted messages for non-"Custom" date option
+						processedValue =
+							Number(props.messages.processedMessages || 0) +
+							Number(props.messages.dispatchedMessages || 0);
+					}
+				} else if (props.sourceselectValue === "ASTRONICS") {
+					if (props.DateOption === "Custom") {
+						// Include only dispatched and deleted messages for "Custom" date option
+						processedValue =
+							Number(props.messages.dispatchedMessages || 0) +
+							Number(props.messages.deletedMessages || 0);
+					} else {
+						// Include only dispatched messages for non-"Custom" date option
+						processedValue =
+							Number(props.messages.dispatchedMessages || 0);
+					}
+				} else {
+					if (props.DateOption === "Custom") {
+						// Include processed and deleted messages for "Custom" date option
+						processedValue =
+							Number(props.messages.processedMessages || 0) +
+							Number(props.messages.deletedMessages || 0);
+					} else {
+						// Include only processed messages for non-"Custom" date option
+						processedValue =
+							Number(props.messages.processedMessages || 0);
+					}
+				}
+	
+				return processedValue;
+			})(),
+			
 		},
 		{ name: 'Awaiting Processing', value: props.messages.inQueue != 0 ? props.messages.inQueue : '' },
 		{ name: 'Failed ', value: props.messages.failedProcessing != 0 ? props.messages.failedProcessing : '' },
-		//{ name: 'Resolved ', value: props.messages.resolvedMessages != 0?props.messages.resolvedMessages:''},
+		
 	];
 
 	const COLORS = ['#50cd89', '#ffc700', '#f1416c', '#50cd89', '#495d78'];
-	//const COLORS = ['#7239ea', '#50cd89', '#ffc700', '#f1416c', '#495d78'];
-	//const COLORS = ['#00b2ff', '#7239ea', '#50cd89', '#ffc700', '#f1416c', '#495d78'];
+
 	const RADIAN = Math.PI / 180;
 
 	const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, payload }) => {
@@ -123,95 +162,11 @@ const SimplePieChart = (props) => {
 	);
 };
 
-// const barChartData = [
-// 	{
-// 		Messages: 35,
-// 	},
-// 	{
-// 		Messages: 56,
-// 	},
-// 	{
-// 		Messages: 48,
-// 	},
-// 	{
-// 		Messages: 75,
-// 	},
-// 	{
-// 		Messages: 62,
-// 	},
-// 	{
-// 		Messages: 54,
-// 	}
-// ];
 
-// const SimpleBarChart1 = () => {
-// 	return (
-// 		<div className="text-center mx-auto">
-// 			<ResponsiveContainer width="100%" height={300}>
-// 				<BarChart width={300} height={300} data={barChartData}>
-// 					<CartesianGrid strokeDasharray="3 3" />
-// 					<XAxis />
-// 					<YAxis dataKey="Messages" />
-// 					<Tooltip />
-
-// 					<Bar dataKey="Messages" fill="#594d96" />
-// 				</BarChart>
-// 			</ResponsiveContainer>
-// 		</div>
-// 	);
-// };
-
-// const messageTypeData = [
-// 	{
-// 		name: "PO_Creation",
-// 		messagesCount: 98,
-
-// 	},
-// 	{
-// 		name: "PO_Ack",
-// 		messagesCount: 65,
-
-// 	},
-// 	{
-// 		name: "Shipment",
-// 		messagesCount: 47,
-
-// 	},
-// 	{
-// 		name: "PO_Change",
-// 		messagesCount: 9,
-
-// 	},
-// 	{
-// 		name: "Invoice_Ack",
-// 		messagesCount: 53,
-
-// 	}
-
-// ];
-
-// const SimpleBarChart2 = () => {
-// 	return (
-// 		<div className="text-center mx-auto">
-// 			<ResponsiveContainer width="100%" height={300}>
-// 				<BarChart width={300} height={300} data={messageTypeData}>
-// 					<CartesianGrid strokeDasharray="3 3" />
-// 					<XAxis dataKey="name">
-
-// 					</XAxis>
-// 					<YAxis dataKey="messagesCount" />
-// 					<Tooltip />
-
-// 					<Bar dataKey="messagesCount" fill="#495d78" />
-// 				</BarChart>
-// 			</ResponsiveContainer>
-// 		</div>
-// 	);
-// };
 
 const MessagingReport = (props) => {
 
-	console.log(props.showDayChart);
+	//console.log(props.showDayChart);
 
 	return (
 
