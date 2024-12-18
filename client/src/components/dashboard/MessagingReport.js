@@ -233,7 +233,7 @@ const MessagingReport = (props) => {
 					{/*begin::Body*/}
 					<div class="card-body  pe-3 ps-3 pb-3">
 						<div id="kt_charts_widget_28" class="h-300px w-100 min-h-auto mx-auto my-auto"  >
-							<SimplePieChart messages={props.messages} sourceselectValue={props.sourceselectValue} />
+							<SimplePieChart messages={props.messages} sourceselectValue={props.sourceselectValue} DateOption={props.DateOption} />
 						</div>
 					</div>
 					{/*end::Body*/}
