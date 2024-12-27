@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-route
 import { useMsal, AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
 import Dashboard from "./components/dashboard";
 import MessageTracing from "./components/messageTracing";
-import Header from './components/Header';
 import axios from 'axios';
 import { UserProvider } from './UserContext'; // Import UserProvider
 import { useUser } from './UserContext';
@@ -32,13 +31,13 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <UserProvider> {/* Wrap with UserProvider */}
-        <AuthenticatedTemplate>
-          <MainApp /> {/* Only render MainApp here */}
-        </AuthenticatedTemplate>
-        <UnauthenticatedTemplate>
-          <Login />
-        </UnauthenticatedTemplate>
+        <UserProvider> {/* Wrap with UserProvider */}
+          <AuthenticatedTemplate>
+            <MainApp /> {/* Only render MainApp here */}
+          </AuthenticatedTemplate>
+          <UnauthenticatedTemplate>
+            <Login />
+          </UnauthenticatedTemplate>
         </UserProvider>
       </BrowserRouter>
     </div>
@@ -47,24 +46,24 @@ function App() {
 
 // Login component
 function Login() {
-  const { instance ,accounts } = useMsal();
+  const { instance, accounts } = useMsal();
   const navigate = useNavigate();
-  
+
 
   const handleLogin = () => {
     instance.loginRedirect({
       scopes: ["User.Read"],
     })
-    .then(() => {
-      // Set active account after login
-      if (accounts.length > 0) {
-        instance.setActiveAccount(accounts[0]);
-      }
-      navigate("/dashboard"); // Redirect after login
-    })
-    .catch((error) => {
-      console.error("Login failed:", error);
-    });
+      .then(() => {
+        // Set active account after login
+        if (accounts.length > 0) {
+          instance.setActiveAccount(accounts[0]);
+        }
+        navigate("/dashboard"); // Redirect after login
+      })
+      .catch((error) => {
+        console.error("Login failed:", error);
+      });
   };
 
   const styles = {
@@ -105,13 +104,12 @@ function MainApp() {
   const { instance, accounts } = useMsal();
   const navigate = useNavigate();
 
-  
+
   const { user, setUser } = useUser();
 
   const fetchUserDetails = async () => {
     // Check if an active account is set
     const activeAccount = instance.getActiveAccount();
-   // console.log(activeAccount);
     if (activeAccount) {
       const request = {
         scopes: ["User.Read"],
@@ -120,21 +118,21 @@ function MainApp() {
 
       try {
         const accessToken = await getToken(); // Automatically handles token expiration and redirection
-       
+
         // Exit if no token is available
-        if (!accessToken){
+        if (!accessToken) {
           navigate("/");
           return;
-        }  
+        }
         // Fetch user details using the token
-    const response = await axios.get("https://graph.microsoft.com/v1.0/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+        const response = await axios.get("https://graph.microsoft.com/v1.0/me", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-   // console.log("User details fetched:", response.data);
-    setUser(response.data);
+        // console.log("User details fetched:", response.data);
+        setUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user details:", error);
       }
@@ -149,13 +147,13 @@ function MainApp() {
       fetchUserDetails();
     }
   }, [accounts]);
-  
+
 
   return (
     <>
-    
+
       <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/messageTracing" element={<ProtectedRoute><MessageTracing /></ProtectedRoute>} />
       </Routes>
