@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef ,useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext'; // Import InputText
@@ -11,7 +11,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Dialog } from 'primereact/dialog';
 import Header from '../Header';
 import SearchFilter from '../Common/SearchFilter';
-import axios from 'axios';
 import moment from 'moment';
 import { Button } from 'primereact/button';
 import { format, subMonths, parse, isValid } from 'date-fns';
@@ -21,38 +20,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from "react-router-dom";
 
 
-
-
-
 const MessageTracing = () => {
-    const [isPopupVisible, setPopupVisible] = useState(false);
+
     const [selectedRowData, setSelectedRowData] = useState(null);
-    const [isAdvanced, setIsAdvanced] = useState(false);
-    const [filterRows, setFilterRows] = useState([{ key: 0, value: '' }]);
     const [messagesummary, setmessagesummary] = useState([]);
     const [showDataTable, setShowDataTable] = useState(false);
     const { state } = useLocation();
     const [displayValue, setDisplayValue] = useState("");
 
-    const [show, setShow] = useState(false);
-    const username = sessionStorage.getItem('userName');
-    const handleClose = () => {
-        if (modalRef.current) {
-          try {
-            const modalElement = modalRef.current;
-            modalElement.classList.remove("show");
-            setShow(false);
-          } catch (error) {
-            console.error("Error hiding modal:", error);
-          }
-        }
-      };
-    const handleShow = () => setShow(true);
-    const modalRef = useRef(null);
-    const [rowDataResolve, setRowDataResolve] = useState(null);
-
-    
-
+    //Global filter dateformats
     const dateFormats = [
         "dd-MM-yyyy",
         "yyyy-MM-dd",
@@ -63,91 +39,70 @@ const MessageTracing = () => {
         "dd-MM-yy",
         "d-MM-yyyy",
         // Add any additional formats as needed
-      ];
+    ];
 
-      const parseDate = (value) => {
+    const parseDate = (value) => {
         for (const formatString of dateFormats) {
-          const parsedDate = parse(value, formatString, new Date());
-          if (isValid(parsedDate) && value.length == formatString.length) {
-            return format(parsedDate, "yyyy-MM-dd"); // Standardized format
-          }
+            const parsedDate = parse(value, formatString, new Date());
+            if (isValid(parsedDate) && value.length == formatString.length) {
+                return format(parsedDate, "yyyy-MM-dd"); // Standardized format
+            }
         }
         return value; // Return original input if it doesn't match a date format
-      };
-    
-   
-
-    
-
-    
-
-  
-  
-   
-
+    };
 
     const handleButtonDownloadClick = (rowData) => {
-        
-        if(rowData.status=='Archived'){
-            
-        }
-   
+
     };
-    
 
-   
-
-    const dateBodyTemplateStatus=(status)=>{
-        
+    const dateBodyTemplateStatus = (status) => {
         return status.replace('_', ' ')
-                 .replace(/\b\w/g, char => char.toUpperCase()); // Capitalizes each word
+            .replace(/\b\w/g, char => char.toUpperCase()); // Capitalizes each word
     }
 
     const statusFormats = {
         "picked up": "Picked_up",
         "awaiting pickup": "Awaiting_pickup",
         // Add any additional status mappings as needed
-      };
-     
-      const parseStatus = (value) => {
-        // return statusFormats[value.toLowerCase()] || value;
-     
+    };
+
+    const parseStatus = (value) => {
         const trimmedValue = value.trim().toLowerCase();
-        
         // Look for a close match based on the beginning of the input
         for (const [key, dbValue] of Object.entries(statusFormats)) {
-          if (key.startsWith(trimmedValue)) {
-           // console.log(dbValue);
-            return dbValue;
-          }
+            if (key.startsWith(trimmedValue)) {
+                // console.log(dbValue);
+                return dbValue;
+            }
         }
         // Return the original value if no close match is found
         return value;
-      };
+    };
 
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef(null);
 
 
+    //filter in datatable
     const onFilter = (e) => {
         const inputValue = e.target.value;
         setDisplayValue(inputValue);
+
+        // Clear filter when input is empty
+        if (!inputValue.trim()) {
+            setGlobalFilter(null); // Clear global filter state
+            dt.current.filter(null, "global", "contains"); // Reset the table filter
+            return;
+        }
+
         const standardizedStatus = parseStatus(inputValue);
         const standardizedDate = parseDate(inputValue);
-        console.log(standardizedDate);
+       // console.log(standardizedDate);
         const standardizedFilter =
-          standardizedStatus !== inputValue ? standardizedStatus : standardizedDate;
+            standardizedStatus !== inputValue ? standardizedStatus : standardizedDate;
         setGlobalFilter(standardizedFilter);
         dt.current.filter(standardizedFilter, "global", "contains");
-      };
-
-   
-
-   
-   
-  
-
-    
+    };
 
     const [startDate, setStartDate] = useState(subMonths(new Date(), 1));
     const [endDate, setEndDate] = useState(new Date());
@@ -160,37 +115,22 @@ const MessageTracing = () => {
 
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
-       // console.log(endDate);
     };
 
-    
-   
-
-
+    //start and end date setting value
     const format_Date = (date, addDate) => {
         const d2 = date;
-       // console.log(d2.toISOString());
         if (addDate) {
-        
-          d2.setUTCHours(23, 59, 59, 999);
-         // console.log(d2.toISOString());
-         
-          
-       
-         
-          const EndDate = d2.toISOString();
-          d2.setDate(d2.getDate() - 1);
-        
-          setEndDate(new Date(d2));
-          return EndDate;
+            d2.setUTCHours(23, 59, 59, 999);
+            const EndDate = d2.toISOString();
+            d2.setDate(d2.getDate() - 1);
+            setEndDate(new Date(d2));
+            return EndDate;
         }
         d2.setUTCHours(0, 0, 0, 0);
-       
-     
-       // console.log(d2.toISOString());
         setStartDate(new Date(d2));
         return d2.toISOString();
-      };
+    };
 
     const [first, setFirst] = useState(1); // To manage current page
     const rows = 10; // Number of rows per page
@@ -204,14 +144,10 @@ const MessageTracing = () => {
         // Check if the clicked column is 'messageID'
         if (clickedColumn === 0) {
             // Open the dialog box
-            setSelectedRowData(rowData); 
+            setSelectedRowData(rowData);
         }
-        
-    }
-  
 
-   
-    
+    }
 
     const Reset = (e) => {
         e.preventDefault();
@@ -219,101 +155,84 @@ const MessageTracing = () => {
         setEndDate((new Date()));
         setMessageType('All');
         setDocumentId('hello');
-        console.log('hi')
+
         const newFormData = {
             startDate: startDate,
             endDate: endDate,
             messageType,
-            documentId,
+
         };
         getAllMessageData(newFormData);
-       setShowDataTable(false);
-       
+        setShowDataTable(false);
+
     };
-    
-
-
-   
-
 
     const getMessageTracingData = () => {
 
         const isDirect = state?.isDirect ?? false;
-       // console.log(isDirect);
         if (isDirect) {
-          // Setting the DatePicker in message Tracing
-          setStartDate(state.startDate);
-          const EndDate = new Date(state.endDate);
-          EndDate.setUTCHours(23, 59, 59, 999);
-          EndDate.setDate(EndDate.getDate() - 1);
-        
-          setEndDate(EndDate);
-         
-          let newFormData = {
-            startDate: state.startDate,
-            endDate: state.endDate,
-          };
-          if (state.messageSource !== "All") {
-            newFormData.messageSource = state.messageSource;
-          }
-          if (state.status !== "All") {
-            newFormData.status = state.status;
-          }
-          if (state.productType !== "All") {
-            newFormData.productType = state.productType;
-          }
-    
-          
-    
-          getAllMessageData(newFormData);
-         
-          return;
+            // Setting the DatePicker in message Tracing
+            setStartDate(state.startDate);
+            const EndDate = new Date(state.endDate);
+            EndDate.setUTCHours(23, 59, 59, 999);
+            EndDate.setDate(EndDate.getDate() - 1);
+            setEndDate(EndDate);
+            let newFormData = {
+                startDate: state.startDate,
+                endDate: state.endDate,
+            };
+            if (state.messageSource !== "All") {
+                newFormData.messageSource = state.messageSource;
+            }
+            if (state.status !== "All") {
+                newFormData.status = state.status;
+            }
+            if (state.productType !== "All") {
+                newFormData.productType = state.productType;
+            }
+            getAllMessageData(newFormData);
+
+            return;
         }
 
         var getStartDate = format_Date(startDate, 0);
-        
+
         var getEndDate = format_Date(endDate, 1);
 
         const newFormData = {
             startDate: getStartDate,
             endDate: getEndDate,
             messageType,
-            documentId,
+
         };
 
         getAllMessageData(newFormData)
     }
 
     const getAllMessageData = (newFormData) => {
-        
-        HttpClient.get('/api/getAllMessageTracing/messageTracingWithQuery',{
+        HttpClient.get('/api/getAllMessageTracing/messageTracingWithQuery', {
             params: newFormData
-          }
-         )
+        }
+        )
             .then(function (response) {
-               
                 var result = response.data;
-               
                 setmessagesummary(result);
-
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
+    
     const dateBodyTemplate = (data) => {
-        
+
         if (!data) return ""; // Return empty string if data is null or undefined
         return moment(data).format("DD-MMM-YYYY HH:mm:ss");
     }
 
-    
-
-    
     useEffect(() => {
         getMessageTracingData();
-        
-    }, [rowDataResolve]);
+
+    }, []);
 
     const [visibleColumns, setVisibleColumns] = useState({
         messageID: true,
@@ -327,54 +246,49 @@ const MessageTracing = () => {
     });
 
     const initialColumns = [
-       
-       
         {
             field: 'productType', header: 'Product Type', sortable: true, disabled: true, tooltip: 'Type of the Product',
         },
         {
             field: 'xmlMessageName', header: 'Document Name', sortable: true, disabled: true, tooltip: 'Document Name with Appended Date',
         },
-        { field: 'documentID', header: 'Document ID', sortable: true, disabled: false, tooltip: 'Name of the Document ID',
+        {
+            field: 'documentID', header: 'Document ID', sortable: true, disabled: false, tooltip: 'Name of the Document ID',
+        },
+        { field: 'xmlMessageSource', header: 'XML Message Source', sortable: true, disabled: true, tooltip: 'Source of the Request' },
+        { field: 'messageType', header: 'Message Type', sortable: true, disabled: true, tooltip: 'Type of the Message' },
+        { field: 'messageDirection', header: 'Message Direction', sortable: true, disabled: true, tooltip: 'Direction of Request Message' },
+        { field: 'receivedDate', header: 'Received Date', sortable: true, disabled: true, body: (rowData) => dateBodyTemplate(rowData.receivedDate), tooltip: 'Request Received Date' },
+        { field: 'status', header: 'Status', sortable: true, disabled: true, body: (rowData) => dateBodyTemplateStatus(rowData.status), tooltip: 'Status of the Message' },
+        { field: 'processedDate', header: 'Processed Date', sortable: true, disabled: false, body: (rowData) => dateBodyTemplate(rowData.processedDate), tooltip: 'Request Processed Date' },
+        {
+            field: '',
+            header: 'Download',
+            sortable: false,
+            disabled: true,
+            // tooltip: 'This is the Download column',
+            body: (rowData) => (
+                <a
+                    href={rowData.url ? rowData.url : undefined}
+                    target="_blank"
+                    style={{
+                        pointerEvents: rowData.url ? 'auto' : 'none',
+                    }}
+                >
+                    <i
+                        className="fa fa-download pe-1"
+                        style={{
+                            color: rowData.url ? 'rgb(6, 85, 144)' : '#888',
+                            cursor: rowData.url ? 'pointer' : 'not-allowed'
+                        }}
+                        onClick={() => {
+                            if (rowData.url) handleButtonDownloadClick(rowData);
+                        }}
+                    ></i>
+                </a>
+            ),
         },
 
-        { field: 'xmlMessageSource', header: 'XML Message Source', sortable: true, disabled: true,tooltip: 'Source of the Request' },
-        { field: 'messageType', header: 'Message Type', sortable: true, disabled: true ,tooltip: 'Type of the Message'},
-        { field: 'messageDirection', header: 'Message Direction', sortable: true, disabled: true ,tooltip: 'Direction of Request Message'},
-        { field: 'receivedDate', header: 'Received Date', sortable: true, disabled: true , body: (rowData) => dateBodyTemplate(rowData.receivedDate) ,tooltip:  'Request Received Date'},
-        { field: 'status', header: 'Status', sortable: true, disabled: true, body: (rowData) => dateBodyTemplateStatus(rowData.status),tooltip: 'Status of the Message'},
-        
-        
-         { field: 'processedDate', header: 'Processed Date', sortable: true, disabled: false,  body: (rowData) => dateBodyTemplate(rowData.processedDate) ,tooltip:  'Request Processed Date'},
-       
-       {
-        field: '',
-        header: 'Download',
-        sortable: false,
-        disabled: true,
-       // tooltip: 'This is the Download column',
-        body: (rowData) => (
-            <a 
-                href={rowData.url ? rowData.url : undefined} 
-                target="_blank" 
-                style={{
-                    pointerEvents: rowData.url ? 'auto' : 'none',
-                }}
-            >
-                <i 
-                    className="fa fa-download pe-1" 
-                    style={{ 
-                        color: rowData.url ? 'rgb(6, 85, 144)' : '#888', 
-                        cursor: rowData.url ? 'pointer' : 'not-allowed'
-                    }}
-                    onClick={() => {
-                        if (rowData.url) handleButtonDownloadClick(rowData);
-                    }}
-                ></i>
-            </a> 
-        ),
-    },
-       
 
     ];
 
@@ -384,9 +298,6 @@ const MessageTracing = () => {
         acc[column.field] = { checked: column.disabled, disabled: column.disabled };
         return acc;
     }, {});
-
-
-
 
     const [showModal, setShowModal] = useState(false);
 
@@ -399,7 +310,7 @@ const MessageTracing = () => {
         setShowModal(false);
     };
 
-    
+
     const [selectedColumns, setSelectedColumns] = useState(initialState);
 
     const handleCheckboxChange = (column) => {
@@ -422,20 +333,7 @@ const MessageTracing = () => {
         setShowModal(false);
     };
 
-
-    
-    
-
-   
-
-
-
-    
-
     const exportExcel = () => {
-
-       
-
         import('xlsx').then((xlsx) => {
             const worksheet = xlsx.utils.json_to_sheet(messagesummary);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
@@ -463,16 +361,12 @@ const MessageTracing = () => {
     };
 
 
-
-    
-
-
     return (
         <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
             {/*begin::Page  */}
             <div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-            <div style={{ position: "sticky",top:0,zIndex:1000 }}>
-                <Header activeMenuItem="messageTracing" />
+                <div style={{ position: "sticky", top: 0, zIndex: 1000 }}>
+                    <Header activeMenuItem="messageTracing" />
                 </div>
                 <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
                     {/*begin::Wrapper container*/}
@@ -484,17 +378,9 @@ const MessageTracing = () => {
                                 {/*begin::Content*/}
                                 <div>
 
-
-                                    <SearchFilter showSaveButton={false} showSave={true} showSettings={false} showSearch={true} startDate={startDate} endDate={endDate} messageType={messageType} documentId={documentId} onStartDateChange={handleStartDateChange} onEndDateChange={handleEndDateChange} onMessageTypeChange={setMessageType} onDocumentIdChange={setDocumentId} setmessagesummary={setmessagesummary} Reset={Reset} getAllMessageData={getAllMessageData}  setShowDataTable={setShowDataTable}/>
-
+                                    <SearchFilter showSaveButton={false} showSave={true} showSettings={false} showSearch={true} startDate={startDate} endDate={endDate} messageType={messageType} documentId={documentId} onStartDateChange={handleStartDateChange} onEndDateChange={handleEndDateChange} onMessageTypeChange={setMessageType} onDocumentIdChange={setDocumentId} setmessagesummary={setmessagesummary} Reset={Reset} getAllMessageData={getAllMessageData} setShowDataTable={setShowDataTable} />
 
                                 </div>
-
-
-                               
-
-
-
 
                                 {showModal && (
                                     <Dialog header="Settings" visible={true} onHide={onModalClose} style={{ width: '30%' }}>
@@ -552,8 +438,6 @@ const MessageTracing = () => {
                                         </div>
                                     </div>
 
-
-
                                     <DataTable
                                         ref={dt}
                                         value={messagesummary}
@@ -562,20 +446,15 @@ const MessageTracing = () => {
                                         paginator
                                         rows={10}
                                         rowsPerPageOptions={[10, 25, 50, 100]}
-                                       
+
                                         onRowClick={(event) => onRowClick(event)}
                                         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                                         currentPageReportTemplate="{first} to {last} of {totalRecords}"
                                     >
 
-
-
-
-                                        
-
                                         {columns
                                             .filter((col) => selectedColumns[col.field]?.checked) // Only include columns that are selected
-                                            .map((col,index) => (
+                                            .map((col, index) => (
                                                 <Column
                                                     key={col.field}
                                                     field={col.field}
@@ -594,15 +473,10 @@ const MessageTracing = () => {
 
                                     </DataTable>
 
-                                  
+
                                 </div>
 
-
-                               
-
                                 <ToastContainer />
-                               
-
 
                             </div>
                         </div>
