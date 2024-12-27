@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { MessageTypes, OptionalFields } from './MessageData';
+import { MessageTypes } from './MessageData';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { format, subMonths } from 'date-fns';
-import axios from 'axios';
+import { subMonths } from 'date-fns';
 import HttpClient from '../config/HttpConfig';
 import { toast } from 'react-toastify';
 
@@ -15,27 +13,9 @@ const SearchFilter = (props) => {
     const [messagesummary, setmessagesummary] = useState([]);
     const { showDataTable, setShowDataTable } = props;
     const [isSaved, setIsSaved] = useState(false);
-    const [savedSearch, setSavedSearch] = useState([])
-    const [isAdvanced, setIsAdvanced] = useState(false);
-    const [filterRows, setFilterRows] = useState([{ key: 0, value: '' }]);
-    const [saveButton, setSaveButton] = useState(props.showSaveButton);
-    const [showSettings, setShowSettings] = useState(props.showSettings);
     const [showSearch, setShowSearch] = useState(props.showSearch);
-    const [isSavedSelected, setIsSavedSelected] = useState(false);
-    const [isEditable, setIsEditable] = useState(false)
     const [HandleChange, setHandleChange] = useState(false);
     
-    const [formData, setFormData] = useState({});
-
-    const toggleFilterType = () => {
-        setIsAdvanced(!isAdvanced);
-        setFilterRows([{ key: 0, value: '' }]);
-        setSaveButton(props.showSave ? !isAdvanced : false);
-    };
-    const handleEditClick = () => {
-        setIsEditable(true);
-    };
-
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef(null);
 
@@ -44,7 +24,7 @@ const SearchFilter = (props) => {
         dt.current.filter(e.target.value, 'global', 'contains');
     };
 
-   
+
     const [startDate, setStartDate] = useState(props.startDate);
     const [endDate, setEndDate] = useState(props.endDate);
     const [messageType, setMessageType] = useState('All');
@@ -55,13 +35,11 @@ const SearchFilter = (props) => {
     };
 
     const handleEndDateChange = (date) => {
-       
         setHandleChange(true);
-      
         setEndDate(date);
-        
     };
 
+    //Datepicker value setting for start and end date
     const CustomDatePickerInput = ({ value, onClick }) => (
         <div className="input-group d-flex" >
             <input
@@ -82,20 +60,12 @@ const SearchFilter = (props) => {
         </div>
     );
 
-    const SwitchSavedsearch = (e) => {
-        setIsSaved(true);
-    };
-    const SwitchDefaultsearch = (e) => {
-        setIsSaved(false);
-        setIsSavedSelected(false);
-        setIsEditable(false);
-        setIsAdvanced(false);
-    };
+    
 
 
     const isCurrentZoneBehindUTC = (date) => {
         // Get the time string with the UTC offset in the specified time zone
-       // console.log(date);
+        // console.log(date);
         let offsetMinutes = new Date().getTimezoneOffset();
         if (offsetMinutes > 0) {
             const LocalDateTime = new Date(date);
@@ -110,27 +80,23 @@ const SearchFilter = (props) => {
     const Reset = (e) => {
         e.preventDefault();
         setStartDate(subMonths(new Date(), 1));
-        
         const EndDate = new Date();
         EndDate.setUTCHours(23, 59, 59, 999);
         const QueryEndDate = EndDate;
         EndDate.setDate(EndDate.getDate() - 1)
         setEndDate(EndDate);
-       
         setMessageType('All');
         setDocumentId('');
-       
 
         const newFormData = {
             startDate: subMonths(startDate, 3),
             endDate: QueryEndDate,
             messageType: 'All',
-
         };
-       
+
         props.getAllMessageData(newFormData)
         setShowDataTable(false);
-       
+
     };
 
 
@@ -149,30 +115,14 @@ const SearchFilter = (props) => {
     }
 
 
+    
+    
 
-
-
-
-
-   
-
-    const handleChange = (key, value) => {
-        setFilterRows(
-            filterRows.map((row) => (row.key === key ? { ...row, value } : row))
-        );
-    };
-    const handleSavedSearchChange = (e) => {
-        setSavedSearch(e.target.value);
-        setIsSavedSelected(true);
-    }
-    // var getStartDate = startDate.getDate();
-
+    //Search click funtionality
     const handleSubmit = (e) => {
         e.preventDefault();
         var getStartDate = formatDate(startDate, 0);
-       // console.log(getStartDate);
         var getEndDate = formatDate(endDate, 1);
-        
 
         if (getStartDate > getEndDate) {
             toast("Received Date From cannot be greater than Received Date To.", {
@@ -186,43 +136,30 @@ const SearchFilter = (props) => {
             startDate: getStartDate,
             endDate: getEndDate,
             messageType,
-            documentId,
         };
-       
+
         // Update formData state
         props.getAllMessageData(newFormData)
-        
+
     };
 
 
-
+    //start and end date setting the value
     const formatDate = (date, addDate) => {
-
         const d2 = date;
         if (addDate) {
-
-           
             const offminutes = new Date().getTimezoneOffset(); // for utc negative regions
             if (offminutes > 0 && HandleChange) {
                 d2.setDate(d2.getDate() - 1);       // for utc negative regions
                 setHandleChange(false);
             }
             d2.setUTCHours(23, 59, 59, 999);
-          //  console.log("After ISOString" + d2.toISOString());
-
-           
             d2.setDate(d2.getDate() + 1);
-          //  console.log("Before adding Date" + d2.toISOString());
             const endDate = d2.toISOString();
             d2.setDate(d2.getDate() - 1);
-          //  console.log("After subtract Date" + d2.toISOString());
-
             return endDate;
         }
         d2.setUTCHours(0, 0, 0, 0);
-
-
-       // console.log(d2.toISOString());
         return d2.toISOString();
     };
 
@@ -241,17 +178,13 @@ const SearchFilter = (props) => {
                         <div className='d-flex align-items-center'>
                             <span className='text-white m-0 px-3 fs-3'>Search</span>
                         </div>
-                       
+
                     </div>
 
 
-                    
+                    {/* Basic Filter */}
 
-
-
-                        {/* Basic Filter */}
-
-                        {isSaved === false ?
+                    {isSaved === false ?
                         <div class="flex-d-row  " style={{ backgroundColor: "#e1ebf6" }} >
 
                             <form class="form-horizontal row col-md-12" name="messageTracingFilterForm" role="form" >
@@ -287,8 +220,6 @@ const SearchFilter = (props) => {
                                                 customInput={<CustomDatePickerInput />}
                                                 dateFormat="dd-MMM-yyyy"
                                                 wrapperClassName='date-picker-custom-width'
-
-
                                             />
 
 
@@ -306,24 +237,16 @@ const SearchFilter = (props) => {
                                                 {MessageTypes.map((e, key) => {
                                                     return <option key={key} value={e.value}>{e.name}</option>;
                                                 })}
-                                               
+
 
                                             </select>
 
                                         </div>
                                     </div>
-                                    
+
 
 
                                 </div>
-
-
-
-
-
-
-
-
 
 
                                 <div class="justify-content-end flex-d-row mb-2 mt-2 msgtracefilter-btn">
@@ -354,10 +277,10 @@ const SearchFilter = (props) => {
 
                         </div>
                         : null}
-                    </div>
-                    : ''}
+                </div>
+                : ''}
 
-            </div >
+        </div >
     )
 }
 
