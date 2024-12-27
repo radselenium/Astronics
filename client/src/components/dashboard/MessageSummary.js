@@ -3,8 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from "react-router-dom";
 
 function MessageSummary(props) {
-   // console.log(props)
-    //console.log(props.sourceselectValue)
+
     const [isAdvanced, setIsAdvanced] = useState(false);
     const [filterRows, setFilterRows] = useState([{ key: 0, value: '' }]);
     //const [showSave, setshowSave] = useState(true);
@@ -31,15 +30,14 @@ function MessageSummary(props) {
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
     };
-    
-   
+
+
     const Reset = () => {
         setStartDate(getFormattedDate(new Date()));
         setEndDate(getFormattedDate(new Date()));
         setMessageType('All');
         setDocumentId('');
-      //  console.log('hi')
-        //messageType="";
+
     };
     // Function to format a date as "YYYY-MM-DD"
     function getFormattedDate(date) {
@@ -47,30 +45,27 @@ function MessageSummary(props) {
         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-based
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
-       
+
     }
 
-
-   
-
-
+    //setting status value based on daterange filter
     const MultiStatusFilter = (SourceselectValue, dateOption) => {
         let statuses = [];
         if (SourceselectValue === "All") {
             if (dateOption === "Custom") {
-                statuses = ["Dispatched", "Picked_up","Deleted"];
+                statuses = ["Dispatched", "Picked_up", "Deleted"];
                 return statuses;
             }
             statuses = ["Dispatched", "Picked_up"];
         } else if (SourceselectValue === "ASTRONICS") {
             if (dateOption === "Custom") {
-                statuses = ["Dispatched","Deleted"];
+                statuses = ["Dispatched", "Deleted"];
                 return statuses;
             }
             statuses = ["Dispatched"];
         } else {
             if (dateOption === "Custom") {
-                statuses = ["Picked_up","Deleted"];
+                statuses = ["Picked_up", "Deleted"];
                 return statuses;
             }
             statuses = ["Picked_up"];
@@ -81,57 +76,51 @@ function MessageSummary(props) {
     var statuses = MultiStatusFilter(props.sourceselectValue, props.DateOption);
 
 
-
+    //Processed Messages count are based on daterange filter option 
     const calculateMessageCount = () => {
         let messageCount = 0;
 
         if (props.sourceselectValue === "All") {
             if (props.DateOption === "Custom") {
-                messageCount = 
+                messageCount =
                     Number(props.messages.processedMessages || 0) +
                     Number(props.messages.dispatchedMessages || 0) +
                     Number(props.messages.deletedMessages || 0);
-                    console.log(messageCount);
+                console.log(messageCount);
             } else {
-                messageCount = 
+                messageCount =
                     Number(props.messages.processedMessages || 0) +
                     Number(props.messages.dispatchedMessages || 0);
             }
         } else if (props.sourceselectValue === "ASTRONICS") {
             if (props.DateOption === "Custom") {
-                messageCount = 
+                messageCount =
                     Number(props.messages.dispatchedMessages || 0) +
                     Number(props.messages.deletedMessages || 0);
             } else {
-                messageCount = 
+                messageCount =
                     Number(props.messages.dispatchedMessages || 0);
             }
         } else {
             if (props.DateOption === "Custom") {
-                messageCount = 
+                messageCount =
                     Number(props.messages.processedMessages || 0) +
                     Number(props.messages.deletedMessages || 0);
             } else {
-                messageCount = 
+                messageCount =
                     Number(props.messages.processedMessages || 0);
             }
         }
 
         return messageCount;
     };
-    
+
 
 
     return (
         <>
 
-
-
-
-
             <div>&nbsp;</div>
-
-           
 
             {/*begin::Row*/}
             <div class="row g-5 g-xl-10 mb-xl-5 md-mb-5" id='messge-report-card'>
@@ -149,7 +138,7 @@ function MessageSummary(props) {
                                 <div class="d-flex align-items-center mb-md-5 my-4">
                                     {/*begin::Amount*/}
                                     <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Total Messages</span>
-              
+
                                     {/*end::Amount*/}
 
                                 </div>
@@ -171,7 +160,7 @@ function MessageSummary(props) {
                                             {props.messages.incomingMessage}
                                         </span>
                                     </Link>
-                                    {/* <span class="fs-2hx fw-bold text-primary me-2 lh-1 ls-n2">{props.messages.incomingMessage}</span> */}
+
                                     {/*end::Amount*/}
 
                                 </div>
@@ -193,7 +182,7 @@ function MessageSummary(props) {
                 </div>
                 {/*end::Col*/}
 
-              
+
                 {/*begin::Col*/}
                 <div class="col-md-6 col-lg-3 col-xl-3 col-xxl-3 col-sm-6 mb-md-5 mb-xl-5 message-count-card">
 
@@ -207,13 +196,13 @@ function MessageSummary(props) {
                                 <div class="d-flex align-items-center mb-md-5 my-4">
                                     {/*begin::Amount*/}
                                     <span class="fs-2x fw-normal text-dark lh-1 ls-n2 textsize">Processed Messages</span>
-                                    {/* <span class="fs-2x fw-normal text-dark lh-1 ls-n2">Picked Up</span> */}
+
                                     {/*end::Amount*/}
 
                                 </div>
                                 <div class="align-self-center">
                                     {/*begin::Amount*/}
-                                    {/* <span class="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">{props.messages.processedMessages}</span> */}
+
                                     <Link
                                         to={{ pathname: "/messageTracing" }}
                                         state={{
@@ -226,17 +215,6 @@ function MessageSummary(props) {
                                         }}
                                     >
                                         <span className="fs-2hx fw-bold text-success me-2 lh-1 ls-n2">
-                                            {/* {
-                                                props.sourceselectValue === "All"
-                                                    ? Number(props.messages.processedMessages || 0) +
-                                                    Number(props.messages.dispatchedMessages || 0) +
-                                                    Number(props.messages.deletedMessages || 0)
-                                                    : props.sourceselectValue === "ASTRONICS"
-                                                        ? Number(props.messages.dispatchedMessages || 0) +
-                                                        Number(props.messages.deletedMessages || 0)
-                                                        : Number(props.messages.processedMessages || 0) +
-                                                        Number(props.messages.deletedMessages || 0)
-                                            } */}
                                             {calculateMessageCount()}
                                         </span>
                                     </Link>
@@ -273,7 +251,7 @@ function MessageSummary(props) {
                                 {/*begin::Info*/}
                                 <div class="d-flex align-items-center mb-md-5 my-4">
                                     {/*begin::Amount*/}
-                                    
+
                                     <span class="fs-2x fw-normal text-dark me-2 lh-1 ls-n2 textsize">Awaiting Processing</span>
                                     {/*end::Amount*/}
 
@@ -369,15 +347,6 @@ function MessageSummary(props) {
 
             </div>
             {/*end::Row*/}
-
-            {/* Start message Report */}
-
-
-
-            {/* End message Report */}
-
-
-
 
 
             {/*end::Content*/}

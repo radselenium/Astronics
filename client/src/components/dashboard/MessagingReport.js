@@ -46,18 +46,7 @@ const SimplePieChart = (props) => {
 	};
 	const pieChartData = [
 		
-		// {
-		// 	name: 'Processed',
-		// 	value: props.sourceselectValue === "All"
-		// 		? Number(props.messages.processedMessages || 0) +
-		// 		Number(props.messages.dispatchedMessages || 0) +
-		// 		Number(props.messages.deletedMessages || 0)
-		// 		: props.sourceselectValue === "ASTRONICS"
-		// 			? Number(props.messages.dispatchedMessages || 0) +
-		// 			Number(props.messages.deletedMessages || 0)
-		// 			: Number(props.messages.processedMessages || 0) +
-		// 			Number(props.messages.deletedMessages || 0)
-		// },
+		
 		{
 			name: 'Processed',
 			value: (() => {
@@ -165,8 +154,6 @@ const SimplePieChart = (props) => {
 
 
 const MessagingReport = (props) => {
-
-	//console.log(props.showDayChart);
 
 	return (
 
