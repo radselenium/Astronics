@@ -102,7 +102,7 @@ const CustomFilter = (props) => {
             setEndDate(EndDate);
         }
 
-        if (InitialRender.current && CustomDate == 'Custom') {
+        if (InitialRender.current && value1 == 'Custom') {
             getTimeRange(value1, InitialRender);
             InitialRender.current = 0;
             return;
@@ -362,6 +362,22 @@ const CustomFilter = (props) => {
         }
         getTimeRange(props.dateSelectValue, 0);
     }, [sourceselectValue, productselectValue]);
+
+
+    useEffect(()=>{
+        if(props.dateSelectValue =="Custom" && !flag.current){
+            setStartDate(startDate => subMonths(new Date(), 1))
+            const EndDate = new Date();
+            EndDate.setUTCHours(23,59,59,999);
+            EndDate.setDate(EndDate.getDate() - 1)
+            setEndDate(endDate => EndDate);
+            console.log(startDate);
+            console.log(endDate);
+            console.log("Inside Not InitialRender");
+            getTimeRange(props.dateSelectValue, 0);
+        }
+      
+    },[props.dateSelectValue])
 
     const getRecords = (formdata, selectValue) => {
 
