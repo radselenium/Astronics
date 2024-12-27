@@ -208,7 +208,7 @@ const CustomFilter = (props) => {
             if (ProductSource !== "All") {
                 formdata.productType = ProductSource;
             }
-            console.log(formdata);
+           // console.log(formdata);
 
             getRecords(formdata, selectValue)
 
@@ -291,7 +291,7 @@ const CustomFilter = (props) => {
             if (ProductSource !== "All") {
                 formdata.productType = ProductSource;
             }
-            console.log(formdata);
+          //  console.log(formdata);
 
             getRecords(formdata, selectValue);
         }
@@ -371,8 +371,8 @@ const CustomFilter = (props) => {
             EndDate.setUTCHours(23,59,59,999);
             EndDate.setDate(EndDate.getDate() - 1)
             setEndDate(endDate => EndDate);
-            console.log(startDate);
-            console.log(endDate);
+           // console.log(startDate);
+           // console.log(endDate);
             console.log("Inside Not InitialRender");
             getTimeRange(props.dateSelectValue, 0);
         }
