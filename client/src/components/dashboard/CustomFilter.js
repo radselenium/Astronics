@@ -102,12 +102,12 @@ const CustomFilter = (props) => {
             setEndDate(EndDate);
         }
 
-        if (InitialRender.current && value1 == 'Custom') {
-            getTimeRange(value1, InitialRender);
-            InitialRender.current = 0;
-            return;
-        }
-        getTimeRange(value1, InitialRender)
+        // if (InitialRender.current && value1 == 'Custom') {
+        //     getTimeRange(value1, InitialRender);
+        //     InitialRender.current = 0;
+        //     return;
+        // }
+        // getTimeRange(value1, InitialRender)
 
     };
 
@@ -228,7 +228,7 @@ const CustomFilter = (props) => {
 
             // Find the end of the current week (Sunday)
             EndDate = new Date(today);
-            const differenceToSunday = 7 - dayOfWeek; // Calculate days to next Sunday
+            const differenceToSunday = (dayOfWeek === 0) ? 0 : 7 - dayOfWeek; // Calculate days to next Sunday
             EndDate.setDate(EndDate.getDate() + differenceToSunday);
             EndDate.setUTCHours(23, 59, 59, 999);
             formattedEndDate = EndDate.toISOString();
@@ -291,7 +291,7 @@ const CustomFilter = (props) => {
             if (ProductSource !== "All") {
                 formdata.productType = ProductSource;
             }
-          //  console.log(formdata);
+            console.log(formdata);
 
             getRecords(formdata, selectValue);
         }
@@ -311,8 +311,8 @@ const CustomFilter = (props) => {
             }
             StartCustomDate.setUTCHours(0, 0, 0, 0);
             EndCustomDate.setUTCHours(23, 59, 59, 999);
-            console.log(isInitial.current);
-            if (!isInitial.current) {
+            console.log(isInitial);
+            if (!isInitial) {
                 EndCustomDate.setDate(EndCustomDate.getDate() + 1);
                 formattedStartDate = StartCustomDate.toISOString();
                 formattedEndDate = EndCustomDate.toISOString();
@@ -371,12 +371,14 @@ const CustomFilter = (props) => {
             EndDate.setUTCHours(23,59,59,999);
             EndDate.setDate(EndDate.getDate() - 1)
             setEndDate(endDate => EndDate);
-           // console.log(startDate);
-           // console.log(endDate);
-            console.log("Inside Not InitialRender");
-            getTimeRange(props.dateSelectValue, 0);
+           
         }
-      
+        if(InitialRender.current && props.dateSelectValue =='Custom'){
+            getTimeRange(props.dateSelectValue, 1);
+            InitialRender.current = 0;
+            return;
+        }
+        getTimeRange(props.dateSelectValue, 0);
     },[props.dateSelectValue])
 
     const getRecords = (formdata, selectValue) => {
