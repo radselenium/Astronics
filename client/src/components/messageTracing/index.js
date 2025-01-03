@@ -149,23 +149,6 @@ const MessageTracing = () => {
 
     }
 
-    const Reset = (e) => {
-        e.preventDefault();
-        setStartDate(subMonths(new Date(), 3));
-        setEndDate((new Date()));
-        setMessageType('All');
-        setDocumentId('hello');
-
-        const newFormData = {
-            startDate: startDate,
-            endDate: endDate,
-            messageType,
-
-        };
-        getAllMessageData(newFormData);
-        setShowDataTable(false);
-
-    };
 
     const getMessageTracingData = () => {
 
@@ -222,7 +205,7 @@ const MessageTracing = () => {
                 console.log(error);
             });
     }
-    
+
     const dateBodyTemplate = (data) => {
 
         if (!data) return ""; // Return empty string if data is null or undefined
@@ -378,7 +361,7 @@ const MessageTracing = () => {
                                 {/*begin::Content*/}
                                 <div>
 
-                                    <SearchFilter showSaveButton={false} showSave={true} showSettings={false} showSearch={true} startDate={startDate} endDate={endDate} messageType={messageType} documentId={documentId} onStartDateChange={handleStartDateChange} onEndDateChange={handleEndDateChange} onMessageTypeChange={setMessageType} onDocumentIdChange={setDocumentId} setmessagesummary={setmessagesummary} Reset={Reset} getAllMessageData={getAllMessageData} setShowDataTable={setShowDataTable} />
+                                    <SearchFilter showSaveButton={false} showSave={true} showSettings={false} showSearch={true} startDate={startDate} endDate={endDate} messageType={messageType} documentId={documentId} onStartDateChange={handleStartDateChange} onEndDateChange={handleEndDateChange} onMessageTypeChange={setMessageType} onDocumentIdChange={setDocumentId} setmessagesummary={setmessagesummary}  getAllMessageData={getAllMessageData} setShowDataTable={setShowDataTable} />
 
                                 </div>
 
