@@ -79,21 +79,25 @@ const SearchFilter = (props) => {
 
     const Reset = (e) => {
         e.preventDefault();
+       
         setStartDate(subMonths(new Date(), 1));
+        const resetStartDate = subMonths(new Date(), 1);
+        resetStartDate.setUTCHours(0,0,0,0);
         const EndDate = new Date();
         EndDate.setUTCHours(23, 59, 59, 999);
-        const QueryEndDate = EndDate;
+        const QueryEndDate = EndDate.toISOString();
+        console.log(QueryEndDate);
         EndDate.setDate(EndDate.getDate() - 1)
         setEndDate(EndDate);
         setMessageType('All');
         setDocumentId('');
 
         const newFormData = {
-            startDate: subMonths(startDate, 3),
+            startDate: resetStartDate,
             endDate: QueryEndDate,
             messageType: 'All',
         };
-
+console.log(newFormData);
         props.getAllMessageData(newFormData)
         setShowDataTable(false);
 
